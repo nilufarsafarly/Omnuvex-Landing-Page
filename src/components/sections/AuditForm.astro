@@ -1,0 +1,309 @@
+---
+/**
+ * "Book a free audit" card: a mist tray with stacked white boxes (header, 01, 02, 03, footer).
+ * Submitting shows the "Request received" state in the same card and tells the timeline
+ * (Contact.astro) through an `ox:audit` event; "Send another request" resets everything.
+ */
+import ActionButton from '../ui/ActionButton.astro';
+import { needs, industries, MSG_MAX } from '../../data/form';
+---
+
+<div
+  class="ox-contact-card col-span-full mt-8 flex min-w-0 flex-col gap-2 rounded-md bg-mist p-2 md:mt-12 lg:col-span-6 lg:col-start-7 lg:mt-0"
+  data-audit
+>
+  <div class="ox-contact-card-h flex flex-col items-baseline justify-between gap-1 rounded-md bg-white p-5 md:flex-row md:gap-4 md:px-8 md:py-6">
+    <h3 class="m-0 text-heading font-semibold text-ink">Book a free audit</h3>
+    <span class="text-caption text-secondary">Takes about a minute</span>
+  </div>
+
+  <form class="ox-form m-0 flex flex-col gap-2" id="audit-form" data-audit-form>
+    <div class="ox-box rounded-md bg-white p-5 md:px-8 md:py-6">
+      <fieldset class="ox-group m-0 flex min-w-0 flex-col gap-5 border-0 p-0">
+        <legend class="ox-group-h mb-4 flex items-baseline gap-3 p-0 text-[17px] leading-[26px] font-semibold text-ink">
+          <span class="text-caption font-semibold text-action tabular-nums" aria-hidden="true">01</span>What do you need help with?
+        </legend>
+        <div class="ox-chips flex flex-wrap gap-2">
+          {
+            needs.map((label) => (
+              <button class="ox-chip" type="button" aria-pressed="false">
+                <svg class="ox-chip-tick" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12l5 5 9-10" />
+                </svg>
+                {label}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="ox-box rounded-md bg-white p-5 md:px-8 md:py-6">
+      <fieldset class="ox-group m-0 flex min-w-0 flex-col gap-5 border-0 p-0">
+        <legend class="ox-group-h mb-4 flex items-baseline gap-3 p-0 text-[17px] leading-[26px] font-semibold text-ink">
+          <span class="text-caption font-semibold text-action tabular-nums" aria-hidden="true">02</span>About you
+        </legend>
+        <div class="ox-form-row grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+          <p class="ox-field m-0 flex min-w-0 flex-col">
+            <label class="sr-only" for="f-name">Name</label>
+            <input class="ox-input" id="f-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+          </p>
+          <p class="ox-field m-0 flex min-w-0 flex-col">
+            <label class="sr-only" for="f-company">Company (optional)</label>
+            <input class="ox-input" id="f-company" name="company" type="text" autocomplete="organization" placeholder="Company (optional)" />
+          </p>
+        </div>
+        <div class="ox-form-row grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+          <p class="ox-field m-0 flex min-w-0 flex-col">
+            <label class="sr-only" for="f-contact">Phone or email</label>
+            <input class="ox-input" id="f-contact" name="contact" type="text" autocomplete="email" placeholder="Email or phone number" required />
+          </p>
+          <div class="ox-field m-0 flex min-w-0 flex-col">
+            <label class="sr-only" for="f-industry">Industry (optional)</label>
+            <div class="ox-select-wrap relative">
+              <select class="ox-input ox-select is-empty" id="f-industry" name="industry">
+                <option value="" selected>Industry (optional)</option>
+                {industries.map((name) => <option>{name}</option>)}
+              </select>
+              <svg class="pointer-events-none absolute top-3.5 right-4 text-secondary" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="ox-box rounded-md bg-white p-5 md:px-8 md:py-6">
+      <fieldset class="ox-group m-0 flex min-w-0 flex-col gap-5 border-0 p-0">
+        <legend class="ox-group-h mb-4 flex items-baseline gap-3 p-0 text-[17px] leading-[26px] font-semibold text-ink">
+          <span class="text-caption font-semibold text-action tabular-nums" aria-hidden="true">03</span>Anything we should know? <small class="text-[15px] font-normal text-secondary">(optional)</small>
+        </legend>
+        <div class="ox-area-wrap relative">
+          <textarea
+            class="ox-input ox-area"
+            id="f-msg"
+            name="message"
+            maxlength={MSG_MAX}
+            placeholder="The process that takes too long, the tool that doesn’t talk to the others…"
+            aria-label="Message"
+            aria-describedby="f-msg-count"></textarea>
+          <span class="ox-count absolute right-3 bottom-2.5 text-caption text-grey-400 tabular-nums" id="f-msg-count">0/{MSG_MAX}</span>
+        </div>
+      </fieldset>
+    </div>
+  </form>
+
+  <div
+    class="ox-form-foot flex flex-col items-stretch justify-between gap-6 rounded-md bg-white p-5 md:flex-row md:items-center md:px-8 md:py-5"
+    data-audit-foot
+  >
+    <p class="m-0 flex items-start gap-2 text-caption text-secondary">
+      <svg class="mt-px flex-none text-secondary" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </svg>
+      <span>Free, no obligation.<br />Your details stay private: <a class="text-ink underline underline-offset-3" href="#privacy">Privacy Policy</a></span>
+    </p>
+    <ActionButton type="submit" form="audit-form" label="Book a free digital audit" class="flex-none justify-center md:justify-normal" />
+  </div>
+
+  <div class="ox-sent flex flex-1 flex-col items-start justify-center rounded-md bg-white px-8 py-12" role="status" hidden data-audit-sent>
+    <span class="flex size-14 items-center justify-center rounded-md bg-action text-white" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12l5 5 9-10" />
+      </svg>
+    </span>
+    <h4 class="ox-sent-h mt-6 mb-0 text-title font-semibold text-ink">Request received</h4>
+    <p class="ox-sent-p mt-3 mb-0 max-w-[420px] text-body text-secondary">
+      Thanks. We’ll reply within 24 hours to book your 30-minute call. The timeline on the left shows what happens next.
+    </p>
+    <button class="ox-sent-again" type="button" data-audit-again>Send another request</button>
+  </div>
+</div>
+
+<style>
+  /* Service chips: grey like the inputs, ink when picked; the tick slides in */
+  .ox-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    height: 40px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    background: var(--color-mist);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-hover) var(--ease-standard),
+      color var(--dur-hover) var(--ease-standard),
+      border-color var(--dur-hover) var(--ease-standard),
+      gap var(--dur-ui) var(--ease-standard);
+  }
+  .ox-chip:hover {
+    border-color: var(--color-hairline);
+  }
+  .ox-chip:focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: 2px;
+  }
+  .ox-chip-tick {
+    width: 0;
+    overflow: hidden;
+    color: var(--color-orange);
+    transition: width var(--dur-ui) var(--ease-standard);
+  }
+  .ox-chip.is-on {
+    gap: 8px;
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+  .ox-chip.is-on .ox-chip-tick {
+    width: 14px;
+  }
+
+  /* Inputs: mist fill, hairline on hover, white with an orange border on focus */
+  .ox-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    background: var(--color-mist);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--color-ink);
+    outline: none;
+    transition:
+      border-color var(--dur-hover) var(--ease-standard),
+      background-color var(--dur-hover) var(--ease-standard);
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .ox-input::placeholder {
+    color: var(--color-grey-400);
+  }
+  .ox-input:hover {
+    border-color: var(--color-hairline);
+  }
+  .ox-input:focus {
+    background: var(--color-white);
+    border-color: var(--color-action);
+  }
+  .ox-select {
+    padding-right: 48px;
+    cursor: pointer;
+  }
+  .ox-select.is-empty {
+    color: var(--color-grey-400);
+  }
+  .ox-select option {
+    color: var(--color-ink);
+  }
+  .ox-area {
+    height: 112px;
+    padding: 12px 16px 32px;
+    resize: none;
+  }
+
+  /* Sent state replaces the form inside the same card */
+  .ox-sent {
+    animation: ox-sent-in 500ms var(--ease-out);
+  }
+  @keyframes ox-sent-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .ox-sent-again {
+    margin-top: 32px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .ox-sent-again:hover {
+    color: var(--color-action);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ox-chip,
+    .ox-chip-tick,
+    .ox-sent {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { MSG_MAX } from '../../data/form';
+
+  const card = document.querySelector<HTMLElement>('[data-audit]');
+  const form = card?.querySelector<HTMLFormElement>('[data-audit-form]');
+  if (card && form) {
+    const foot = card.querySelector<HTMLElement>('[data-audit-foot]');
+    const sent = card.querySelector<HTMLElement>('[data-audit-sent]');
+    const again = card.querySelector<HTMLButtonElement>('[data-audit-again]');
+    const chips = Array.from(form.querySelectorAll<HTMLButtonElement>('.ox-chip'));
+    const select = form.querySelector<HTMLSelectElement>('.ox-select');
+    const area = form.querySelector<HTMLTextAreaElement>('.ox-area');
+    const count = form.querySelector<HTMLElement>('.ox-count');
+
+    const setChip = (chip: HTMLButtonElement, on: boolean) => {
+      chip.classList.toggle('is-on', on);
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+    };
+    const setCount = (n: number) => {
+      if (count) count.textContent = `${n}/${MSG_MAX}`;
+    };
+    const setSent = (on: boolean) => {
+      form.hidden = on;
+      if (foot) foot.hidden = on;
+      if (sent) sent.hidden = !on;
+      document.dispatchEvent(new CustomEvent('ox:audit', { detail: { sent: on } }));
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => setChip(chip, chip.getAttribute('aria-pressed') !== 'true'));
+    });
+
+    select?.addEventListener('change', () => select.classList.toggle('is-empty', !select.value));
+
+    area?.addEventListener('input', () => setCount(area.value.length));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      setSent(true);
+    });
+
+    // Back to a fresh form: no chips, empty fields, counter at 0, timeline back to "today"
+    again?.addEventListener('click', () => {
+      form.reset();
+      chips.forEach((chip) => setChip(chip, false));
+      select?.classList.add('is-empty');
+      setCount(0);
+      setSent(false);
+    });
+  }
+</script>

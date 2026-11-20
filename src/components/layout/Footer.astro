@@ -1,0 +1,196 @@
+---
+/**
+ * Footer: full-width mist tray inside the page margins; white card with brand, social,
+ * Menu / Contact columns and the bottom row (©, legal links, AZ · RU · EN). The orange
+ * wordmark spans the tray at the bottom, cut by its edge. reveal.ts fades `footer.ox-sfoot` in.
+ */
+import { LANGS } from '../../scripts/lang';
+
+const menu = [
+  { label: 'Company', href: '#' },
+  { label: 'Services', href: '#services' },
+  { label: 'Products', href: '#work' },
+];
+
+const legal = [
+  { label: 'Privacy', href: '#privacy' },
+  { label: 'Terms', href: '#terms' },
+  { label: 'Cookies', href: '#cookies' },
+];
+
+const currentId = 'en';
+---
+
+<footer class="ox-sfoot relative z-1 px-[18px] pb-[18px] md:px-8 md:pb-8">
+  <div class="ox-sfoot-tray overflow-hidden rounded-md bg-mist px-2 pt-2 pb-0">
+    <div class="ox-sfoot-card rounded-md bg-white px-5 pt-10 pb-6 md:px-[max(32px,calc((100vw_-_1216px)/2_-_40px))] md:pt-14 md:pb-8">
+      <div class="ox-sfoot-top grid grid-cols-12 gap-x-6">
+        <div class="ox-sfoot-brand col-span-full lg:col-span-5">
+          <img src="/images/logo/omnuvex.png" alt="Omnuvex" class="block h-auto w-[120px]" />
+          <p class="mt-5 max-w-[360px] text-ui text-secondary">AI automation, custom software and systems integration for growing businesses.</p>
+          <ul class="ox-sfoot-social mt-6 flex list-none gap-2 p-0">
+            <li>
+              <a href="#" aria-label="Omnuvex on LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                  ><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg
+                >
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Omnuvex on Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                  ><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><path d="M17.5 6.5h.01"></path></svg
+                >
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Omnuvex on Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                  ><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg
+                >
+              </a>
+            </li>
+          </ul>
+        </div>
+        <nav
+          class="ox-sfoot-cols col-span-full mt-12 flex items-start justify-between gap-6 justify-self-stretch md:items-stretch md:justify-normal md:gap-16 md:justify-self-start lg:col-[6/-1] lg:mt-0 lg:gap-24 lg:justify-self-end"
+          aria-label="Footer"
+        >
+          <div class="ox-sfoot-col">
+            <h2 class="text-caption font-medium text-grey-400">Menu</h2>
+            <ul class="mt-5 flex list-none flex-col gap-3 p-0">
+              {
+                menu.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+          <div class="ox-sfoot-col">
+            <h2 class="text-caption font-medium text-grey-400">Contact</h2>
+            <ul class="mt-5 flex list-none flex-col gap-3 p-0">
+              <li><a href="mailto:contact@omnuvex.net">contact@omnuvex.net</a></li>
+              <li><address>Khanlar Street 10, Baku</address></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div
+        class="ox-sfoot-bottom mt-12 flex flex-col items-start justify-between gap-6 border-t border-hairline pt-6 text-caption text-secondary md:mt-16 md:flex-row md:items-center"
+      >
+        <p>© 2026 Omnuvex LLC</p>
+        <ul class="ox-sfoot-legal flex list-none flex-wrap items-center gap-x-5 gap-y-3 self-stretch p-0 md:flex-nowrap md:gap-6 md:self-auto">
+          {
+            legal.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))
+          }
+          <li class="ox-sfoot-lang ml-auto flex gap-1 text-grey-400 md:ml-6" aria-label="Language" data-sfoot-lang>
+            {
+              LANGS.map((l, i) => (
+                <>
+                  {i > 0 && '·'}
+                  <a href="#" data-lang={l.id} aria-current={l.id === currentId ? 'true' : undefined}>
+                    {l.code}
+                  </a>
+                </>
+              ))
+            }
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ox-sfoot-markwrap pointer-events-none mt-8 aspect-[1740/282] overflow-hidden select-none md:mt-12" aria-hidden="true">
+      <img class="ox-sfoot-mark block h-auto w-full" src="/images/logo/omnuvex-wordmark.png" alt="" />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ox-sfoot-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-mist);
+    color: var(--color-ink);
+    transition:
+      background-color var(--dur-hover) var(--ease-standard),
+      color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-sfoot-social a:hover {
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+  .ox-sfoot a:focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: 2px;
+  }
+
+  .ox-sfoot-col a,
+  .ox-sfoot-col address {
+    font-style: normal;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-sfoot-col a:hover {
+    color: var(--color-ink);
+  }
+
+  .ox-sfoot-legal a {
+    color: var(--color-secondary);
+    text-decoration: none;
+  }
+  /* Language switch reads as its own group (extra 24px before it on tablet and desktop) */
+  .ox-sfoot-lang a {
+    color: var(--color-grey-400);
+  }
+  .ox-sfoot-legal a:hover {
+    color: var(--color-ink);
+  }
+  .ox-sfoot-lang a[aria-current] {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  /* The wordmark keeps its own colour and proportions; only the tray edge cuts its lowest part.
+     It shrinks with the screen, so below desktop it drops by 16% of its own height instead of 32px */
+  .ox-sfoot-mark {
+    transform: translateY(16%);
+  }
+  @media (width >= 64rem) {
+    .ox-sfoot-mark {
+      transform: translateY(32px);
+    }
+  }
+</style>
+
+<script>
+  import { setLang, onLang, type LangId } from '../../scripts/lang';
+
+  const group = document.querySelector<HTMLElement>('[data-sfoot-lang]');
+  if (group) {
+    const links = group.querySelectorAll<HTMLAnchorElement>('[data-lang]');
+    links.forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        setLang(a.dataset.lang as LangId);
+      });
+    });
+    onLang((id) => {
+      links.forEach((a) => {
+        if (a.dataset.lang === id) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    });
+  }
+</script>

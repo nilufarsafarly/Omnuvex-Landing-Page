@@ -1,0 +1,54 @@
+---
+/**
+ * What our clients say. Desktop: hover accordion in a mist tray (376px tall); hovering, clicking
+ * or focusing a closed card opens it. Tablet and phone: every quote in full, cards stacked.
+ */
+import RevealTitle from '../ui/RevealTitle.astro';
+import QuoteCard from './QuoteCard.astro';
+import { quotes } from '../../data/quotes';
+---
+
+<section id="testimonials" class="ox-quotes relative z-1 pt-16 pb-24 md:pt-24 md:pb-32" aria-labelledby="quotes-title">
+  <div class="ox-quotes-wrap mx-auto max-w-page px-[18px] md:px-8">
+    <RevealTitle
+      id="quotes-title"
+      text="What our clients say"
+      class="ox-quotes-h m-0 text-title-sm font-semibold text-ink md:text-title"
+    />
+    <ul
+      class="ox-quotes-row m-0 mt-8 flex h-auto list-none flex-col gap-2 rounded-md bg-mist p-2 md:mt-12 lg:box-content lg:h-[376px] lg:flex-row"
+      data-quotes
+    >
+      {quotes.map((q, i) => <QuoteCard quote={q} open={i === 0} />)}
+    </ul>
+  </div>
+</section>
+
+<script>
+  const row = document.querySelector<HTMLElement>('[data-quotes]');
+  if (row) {
+    const cards = Array.from(row.querySelectorAll<HTMLLIElement>('.ox-quote'));
+    let current = Math.max(
+      0,
+      cards.findIndex((c) => c.classList.contains('is-open')),
+    );
+
+    const pick = (i: number) => {
+      if (current === i) return;
+      current = i;
+      cards.forEach((card, j) => {
+        const open = j === i;
+        card.classList.toggle('is-open', open);
+        const hit = card.querySelector<HTMLButtonElement>('.ox-quote-hit');
+        if (hit) hit.hidden = open;
+      });
+    };
+
+    cards.forEach((card, i) => {
+      card.addEventListener('mouseenter', () => pick(i));
+      const hit = card.querySelector<HTMLButtonElement>('.ox-quote-hit');
+      hit?.addEventListener('click', () => pick(i));
+      hit?.addEventListener('focus', () => pick(i));
+    });
+  }
+</script>

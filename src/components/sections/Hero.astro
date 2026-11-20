@@ -1,0 +1,76 @@
+---
+/**
+ * Hero: three-line headline, sub-line + "See our work" button, and the two hands behind.
+ * Desktop: one screen tall (720–900px minus the navbar), headline top-left, sub-line block
+ * bottom-right, hands run on behind the next section. Below 1024px: fills the first screen
+ * under the navbar with everything pushed to the bottom; hands sit behind the text.
+ * scripts/scroll.ts moves the hands apart on scroll (reads the data-* on .ox-bg).
+ */
+import ActionButton from '../ui/ActionButton.astro';
+
+type Props = {
+  /** opacity of both hands (0.2–1) */
+  handOpacity?: number;
+  /** move the hands apart as the page scrolls */
+  separateOnScroll?: boolean;
+  /** how far they move apart, in % of the width (0–20) */
+  separation?: number;
+};
+
+const { handOpacity = 0.45, separateOnScroll = true, separation = 8 } = Astro.props;
+const handFilter = 'saturate(0.45) contrast(0.8) brightness(1.15)';
+---
+
+<section class="ox-hero relative box-border flex flex-col items-stretch justify-end pt-12 pb-8 lg:flex-row lg:items-start lg:justify-start lg:pt-[144px] lg:pb-[160px]" aria-labelledby="hero-title">
+  <div
+    class="ox-bg @container pointer-events-none absolute inset-x-0 top-[calc(-1_*_(var(--head-gap)_+_var(--head-h)))] z-0 h-[92vw] max-h-[720px] overflow-hidden lg:bottom-0 lg:h-auto lg:max-h-none lg:overflow-visible"
+    role="img"
+    aria-label="An orange wireframe hand and a human hand reaching toward each other."
+    data-hand-opacity={handOpacity}
+    data-separate={separateOnScroll ? 'true' : 'false'}
+    data-separation={separation}
+  >
+    <img
+      class="ox-hand ox-wire absolute max-w-none top-0 left-[38cqw] h-auto w-[62cqw] mix-blend-multiply will-change-transform lg:top-[-6.9cqw] lg:left-[46cqw] lg:w-[56cqw]"
+      src="/images/hero/hand-wireframe.png"
+      alt=""
+      style={`opacity: ${handOpacity}; filter: ${handFilter}; transform: translate(0cqw, -0cqw) scaleX(-1)`}
+    />
+    <img
+      class="ox-hand ox-human absolute max-w-none top-[36cqw] left-[-2cqw] h-auto w-[50cqw] mix-blend-multiply will-change-transform lg:top-[20.9cqw] lg:left-[-4cqw] lg:w-[60cqw]"
+      src="/images/hero/hand-human.png"
+      alt=""
+      style={`opacity: ${handOpacity}; filter: ${handFilter}; transform: translate(-0cqw, 0cqw) scaleX(-1)`}
+    />
+  </div>
+  <div class="ox-page relative z-1 mx-auto box-border grid w-full max-w-page grid-cols-12 gap-x-6 px-[18px] md:px-8">
+    <div class="ox-copy col-span-full text-left lg:col-[1/span_9]">
+      <h1 id="hero-title" class="ox-title m-0 text-display-sm font-semibold text-ink md:text-display">
+        <span class="ox-line inline md:block">Cutting costs and growing</span>{' '}
+        <span class="ox-line inline md:block">revenue through software</span>{' '}
+        <span class="ox-line inline md:block">and AI automation</span>
+      </h1>
+    </div>
+  </div>
+  <div class="ox-foot static order-1 mt-6 flex w-auto flex-col items-start gap-8 px-[18px] md:px-8 lg:absolute lg:right-[max(32px,calc((100%_-_1280px)_/_2_+_32px))] lg:bottom-16 lg:z-1 lg:order-none lg:mt-0 lg:w-[400px] lg:gap-6 lg:px-0">
+    <p class="ox-sub ox-aside m-0 w-[400px] max-w-full text-left text-body-sm text-secondary md:text-body">
+      We help businesses in Azerbaijan and the region eliminate manual work, connect fragmented systems and turn AI into measurable business impact.
+    </p>
+    <ActionButton label="See our work" href="#work" size="lg" class="ox-cta" />
+  </div>
+</section>
+
+<style>
+  /* Fills the first screen under the navbar (svh where supported) */
+  .ox-hero {
+    min-height: calc(100vh - var(--head-gap) - var(--head-h));
+    min-height: calc(100svh - var(--head-gap) - var(--head-h));
+  }
+
+  @media (width >= 64rem) {
+    /* One screen tall, between 720px and 900px, minus the navbar */
+    .ox-hero {
+      min-height: max(720px, min(100vh, 900px) - 96px);
+    }
+  }
+</style>

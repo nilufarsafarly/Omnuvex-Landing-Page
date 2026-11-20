@@ -1,0 +1,24 @@
+---
+/**
+ * Section title whose words turn from grey to ink one by one as it scrolls
+ * into view (driven by scripts/scroll.ts via .ox-reveal / .ox-w).
+ */
+type Props = {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3';
+  id?: string;
+  class?: string;
+};
+
+const { text, as: Tag = 'h2', id, class: extra } = Astro.props;
+const words = text.trim().split(/\s+/);
+---
+
+<Tag id={id} class:list={['ox-reveal', extra]}>
+  {words.map((w, i) => (
+    <>
+      <span class="ox-w">{w}</span>
+      {i < words.length - 1 && ' '}
+    </>
+  ))}
+</Tag>

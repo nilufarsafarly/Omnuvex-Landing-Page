@@ -1,0 +1,33 @@
+---
+/**
+ * Selected work: stacked cards at every width. Each li sticks under the navbar
+ * (var(--stick-top)) and the next card slides over it; scripts/scroll.ts makes the covered
+ * card step back. A floating "All case studies" button stays near the bottom of the screen
+ * while the section is on screen. The section only fades in (ox-rv--fade): a transform
+ * would break the sticky stacking.
+ */
+import ActionButton from '../ui/ActionButton.astro';
+import RevealTitle from '../ui/RevealTitle.astro';
+import WorkCard from './WorkCard.astro';
+import { work } from '../../data/work';
+---
+
+<section id="work" class="ox-work ox-rv--fade relative z-1 pt-16 pb-24 md:pt-24 md:pb-32" aria-labelledby="work-title">
+  <div class="ox-work-wrap mx-auto box-border max-w-page px-[18px] md:px-8">
+    <div class="ox-work-head flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-8">
+      <RevealTitle text="A snapshot of what we’ve built" id="work-title" class="ox-work-h m-0 text-title-sm font-semibold text-ink md:text-title" />
+    </div>
+    <ol class="ox-work-list mt-10 mb-0 list-none p-0">
+      {
+        work.map((w) => (
+          <li class="ox-work-item sticky top-[var(--stick-top)] mb-8 last:mb-0! lg:mb-16">
+            <WorkCard {...w} />
+          </li>
+        ))
+      }
+    </ol>
+    <div class="ox-work-fab pointer-events-none sticky bottom-8 z-5 mt-12 flex justify-center">
+      <ActionButton label="All case studies" href="#work" class="ox-work-fab-btn pointer-events-auto" />
+    </div>
+  </div>
+</section>

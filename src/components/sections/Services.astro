@@ -1,0 +1,80 @@
+---
+/**
+ * Services: four cards in one mist tray.
+ * Desktop: auto-rotating accordion (the open card is wide); opens the next card every
+ * `rotateSeconds`, paused while hovered, off with reduced motion; a closed card opens on click / Enter.
+ * Tablet: 2-column grid of full cards. Phone: single column of sticky stacking cards; the grey
+ * tray is drawn by .ox-svc-bg, which scripts/scroll.ts keeps wrapped around the cards.
+ */
+import RevealTitle from '../ui/RevealTitle.astro';
+import ServiceCard from './ServiceCard.astro';
+import { services } from '../../data/services';
+
+type Props = {
+  /** seconds each card stays open before the next one opens (2–10) */
+  rotateSeconds?: number;
+};
+
+const { rotateSeconds = 5 } = Astro.props;
+---
+
+<section id="services" class="ox-svc-sec relative z-1 bg-transparent py-16 md:py-24" aria-labelledby="services-title" data-services data-rotate-seconds={rotateSeconds}>
+  <div class="ox-svc-wrap mx-auto box-border max-w-page px-[18px] md:px-8">
+    <RevealTitle text="How we help you grow" id="services-title" class="ox-svc-h m-0 text-title-sm font-semibold text-ink md:text-title" />
+    <p class="ox-svc-intro mt-4 mb-0 max-w-[640px] text-body-sm text-secondary md:text-body">
+      Four service categories — run by operators who scope in writing, document everything and hand off full ownership. No vendor lock-in, ever.
+    </p>
+    <div class="ox-svc-row relative mt-8 grid grid-cols-1 gap-2 rounded-md bg-transparent p-2 md:static md:mt-12 md:grid-cols-2 md:bg-mist lg:flex lg:h-[440px]">
+      <div class="ox-svc-bg pointer-events-none absolute inset-x-0 top-0 z-0 h-full rounded-md bg-mist md:hidden" aria-hidden="true"></div>
+      {services.map((s, i) => <ServiceCard index={i} num={s.num} title={s.title} text={s.text} active={i === 0} />)}
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-services]');
+  const row = root?.querySelector<HTMLElement>('.ox-svc-row');
+  const cards = root ? Array.from(root.querySelectorAll<HTMLElement>('article.ox-svc')) : [];
+
+  if (root && row && cards.length) {
+    const seconds = Number(root.dataset.rotateSeconds) || 5;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let active = Math.max(0, cards.findIndex((c) => c.classList.contains('is-active')));
+    let progress = 0;
+    let paused = false;
+
+    const open = (index: number) => {
+      active = index;
+      progress = 0;
+      cards.forEach((card, i) => {
+        const on = i === index;
+        card.classList.toggle('is-active', on);
+        card.querySelector('.ox-svc-mini')?.setAttribute('aria-hidden', on ? 'true' : 'false');
+        const hit = card.querySelector<HTMLButtonElement>('.ox-svc-hit');
+        if (hit) hit.hidden = on;
+      });
+    };
+
+    // A closed card opens on click (or Enter / Space on its button)
+    cards.forEach((card, i) => {
+      card.querySelector('.ox-svc-hit')?.addEventListener('click', () => open(i));
+    });
+
+    // Paused while the pointer is over the tray
+    row.addEventListener('mouseenter', () => {
+      paused = true;
+    });
+    row.addEventListener('mouseleave', () => {
+      paused = false;
+    });
+
+    // Open the next card every `rotateSeconds` (50ms tick); no autoplay with reduced motion
+    if (!reduced) {
+      window.setInterval(() => {
+        if (paused) return;
+        progress += 50 / (1000 * seconds);
+        if (progress >= 1) open((active + 1) % cards.length);
+      }, 50);
+    }
+  }
+</script>

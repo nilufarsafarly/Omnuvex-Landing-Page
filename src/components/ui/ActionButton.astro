@@ -1,0 +1,47 @@
+---
+/**
+ * Action button: mist shell, orange square with an arrow. On hover/focus the
+ * square fills the button and the label turns white; pressed turns it ink.
+ * Styles live in global.css (.ox-act). Renders <a> when `href` is set, else <button>.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = {
+  label: string;
+  href?: string;
+  type?: 'button' | 'submit';
+  form?: string;
+  /** md = 48px tall, lg = 52px tall with a 44px square */
+  size?: 'md' | 'lg';
+  /** stretch to the container width, label centred */
+  full?: boolean;
+  class?: string;
+} & Omit<HTMLAttributes<'a'> & HTMLAttributes<'button'>, 'type' | 'form' | 'class'>;
+
+const { label, href, type = 'button', form, size = 'md', full = false, class: extra, ...rest } = Astro.props;
+const classes = ['ox-act', size === 'lg' && 'ox-act--lg', full && 'ox-act--full', extra].filter(Boolean).join(' ');
+---
+
+{
+  href ? (
+    <a class={classes} href={href} {...rest}>
+      <span class="ox-act-fill" aria-hidden="true" />
+      <span class="ox-act-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </span>
+      <span class="ox-act-label">{label}</span>
+    </a>
+  ) : (
+    <button class={classes} type={type} form={form} {...rest}>
+      <span class="ox-act-fill" aria-hidden="true" />
+      <span class="ox-act-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </span>
+      <span class="ox-act-label">{label}</span>
+    </button>
+  )
+}

@@ -1,0 +1,324 @@
+@import "tailwindcss";
+
+/*
+ * Omnuvex landing — design tokens and shared styles.
+ * Ported from the Claude Design canvas (Main.dc.html, version 148).
+ *
+ * Breakpoints are phone-first and match the canvas exactly:
+ *   no prefix  → phone   (< 768px)   canvas: max-width:767px
+ *   md:        → tablet  (768–1023)  canvas: max-width:1023px
+ *   lg:        → desktop (≥ 1024px)  canvas: base styles
+ */
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+
+  --font-sans: "Archivo", Inter, Arial, sans-serif;
+
+  /* Colour — DESIGN.md §3.1 */
+  --color-*: initial;
+  --color-orange: #e75416; /* rating dots, timeline "now", accents */
+  --color-action: #cb4a13; /* button square, focus rings, links */
+  --color-ink: #25262a;
+  --color-graphite: #3e424a;
+  --color-secondary: #62666e;
+  --color-mist: #f6f6f6; /* grey trays */
+  --color-white: #ffffff;
+  --color-grey-400: #a7aab0;
+  --color-grey-300: #c9cbcf; /* line drawings, dashed timeline */
+  --color-hairline: #e4e5e7;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Type — size / line-height pairs used in the canvas */
+  --text-display: 60px;
+  --text-display--line-height: 68px; /* hero, desktop (owner override of 56/64) */
+  --text-display-sm: 40px;
+  --text-display-sm--line-height: 44px; /* hero, phone */
+  --text-numeral: 44px;
+  --text-numeral--line-height: 52px; /* process step numbers */
+  --text-title: 36px;
+  --text-title--line-height: 44px; /* section titles */
+  --text-title-sm: 28px;
+  --text-title-sm--line-height: 36px; /* section titles, phone */
+  --text-quote: 22px;
+  --text-quote--line-height: 32px; /* open testimonial */
+  --text-heading: 22px;
+  --text-heading--line-height: 30px;
+  --text-menu: 20px;
+  --text-menu--line-height: 28px; /* mobile menu links */
+  --text-quote-md: 19px;
+  --text-quote-md--line-height: 28px;
+  --text-body: 17px;
+  --text-body--line-height: 28px;
+  --text-body-sm: 16px;
+  --text-body-sm--line-height: 26px;
+  --text-ui: 15px;
+  --text-ui--line-height: 22px;
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+
+  /* Spacing: 4px base, so p-6 = 24px. Brand scale 4…128 = 1, 2, 3, 4, 6, 8, 12, 16, 24, 32 */
+  --spacing: 4px;
+  --container-page: 1280px;
+
+  --radius-sm: 4px; /* square inside buttons, nav links, tags */
+  --radius-md: 8px; /* trays, cards, bars */
+
+  --shadow-floating: 0 8px 24px rgb(37 38 42 / 0.08);
+  --shadow-now: 0 0 0 4px rgb(231 84 22 / 0.15);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* hover, menus, buttons */
+  --ease-emphasis: cubic-bezier(0.65, 0, 0.35, 1); /* services accordion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* text and sections entering */
+  --ease-spring: cubic-bezier(0.25, 1.12, 0.4, 1); /* testimonials widening */
+}
+
+/*
+ * Layout variables. The navbar's size drives sticky stops, hero height,
+ * the hands' offset and the mobile menu panel height.
+ */
+:root {
+  --dur-hover: 150ms;
+  --dur-ui: 250ms;
+  --dur-button: 400ms;
+  --frost: rgb(255 255 255 / 0.72);
+  --frost-blur: 16px;
+
+  --head-gap: 24px; /* space above the navbar at the top of the page */
+  --head-top: 16px; /* where the navbar sticks */
+  --head-h: 60px; /* navbar bar height */
+  --head-inset: 16px; /* navbar floats this far in from the screen edges */
+  --page-margin: 18px;
+  --menu-inset: 16px; /* mobile menu panel inset from sides and bottom */
+  /* where sticky cards and headings stop: 16px under the navbar below desktop */
+  --stick-top: calc(var(--head-top) + var(--head-h) + 16px);
+}
+
+@media (width >= 48rem) {
+  :root {
+    --head-top: 32px;
+    --head-h: 72px;
+    --head-inset: 0px;
+    --page-margin: 32px;
+    --menu-inset: 32px;
+  }
+}
+
+@media (width >= 64rem) {
+  :root {
+    --stick-top: calc(var(--head-top) + var(--head-h));
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+  }
+
+  a {
+    color: var(--color-action);
+  }
+
+  a:hover {
+    color: var(--color-ink);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Action button (ActionButton.astro)                                  */
+/* Mist shell with an orange square. On hover the square fills the     */
+/* button, the arrow slides to the right end and the label turns white */
+/* ------------------------------------------------------------------ */
+.ox-act {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
+  flex-shrink: 0;
+  padding: 0 24px 0 64px;
+  background: var(--color-mist);
+  border: 0;
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ox-act-fill {
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-action);
+  transition:
+    width var(--dur-button) var(--ease-standard),
+    background-color 100ms var(--ease-standard);
+}
+
+.ox-act-icon {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-white);
+  transition: left var(--dur-button) var(--ease-standard);
+}
+
+.ox-act-label {
+  display: block;
+  transition:
+    transform var(--dur-button) var(--ease-standard),
+    color var(--dur-ui) var(--ease-standard);
+}
+
+/* Hover only on devices that really hover, so a tap doesn't leave the button stuck */
+@media (hover: hover) {
+  .ox-act:hover {
+    color: var(--color-white);
+  }
+  .ox-act:hover .ox-act-fill {
+    width: calc(100% - 8px);
+  }
+  .ox-act:hover .ox-act-icon {
+    left: calc(100% - 44px);
+  }
+  .ox-act:hover .ox-act-label {
+    transform: translateX(-40px);
+    color: var(--color-white);
+  }
+}
+
+.ox-act:focus-visible {
+  color: var(--color-white);
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
+}
+.ox-act:focus-visible .ox-act-fill {
+  width: calc(100% - 8px);
+}
+.ox-act:focus-visible .ox-act-icon {
+  left: calc(100% - 44px);
+}
+.ox-act:focus-visible .ox-act-label {
+  transform: translateX(-40px);
+  color: var(--color-white);
+}
+
+/* Pressed: instant feedback on click or tap; the fill covers the button and turns ink */
+.ox-act:active {
+  color: var(--color-white);
+}
+.ox-act:active .ox-act-fill {
+  width: calc(100% - 8px);
+  background: var(--color-ink);
+}
+.ox-act:active .ox-act-icon {
+  left: calc(100% - 44px);
+}
+.ox-act:active .ox-act-label {
+  transform: translateX(-40px);
+  color: var(--color-white);
+}
+
+/* Large: 52px tall with a 44px square (hero "See our work", mobile menu CTA) */
+.ox-act--lg {
+  height: 52px;
+  min-height: 52px;
+  padding-left: 64px;
+}
+.ox-act--lg .ox-act-fill {
+  width: 44px;
+}
+.ox-act--lg .ox-act-icon {
+  width: 44px;
+  height: 44px;
+}
+.ox-act--lg:focus-visible .ox-act-icon,
+.ox-act--lg:active .ox-act-icon {
+  left: calc(100% - 48px);
+}
+.ox-act--lg:focus-visible .ox-act-label,
+.ox-act--lg:active .ox-act-label {
+  transform: translateX(-44px);
+}
+@media (hover: hover) {
+  .ox-act--lg:hover .ox-act-icon {
+    left: calc(100% - 48px);
+  }
+  .ox-act--lg:hover .ox-act-label {
+    transform: translateX(-44px);
+  }
+}
+
+/* Full width: label centred in the remaining space */
+.ox-act--full {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ox-act-fill,
+  .ox-act-icon,
+  .ox-act-label {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll motion (scripts/scroll.ts, scripts/reveal.ts)                */
+/* ------------------------------------------------------------------ */
+
+/* Section titles: words turn from grey to ink one by one as the title scrolls into view */
+.ox-w {
+  color: inherit;
+  transition: color 120ms linear;
+}
+
+/* Sections fade and rise in once (reveal.ts adds .ox-rv only when motion is allowed) */
+.ox-rv {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 800ms var(--ease-out),
+    transform 1000ms var(--ease-out);
+}
+.ox-rv.is-in {
+  opacity: 1;
+  transform: none;
+}
+/* Sections holding sticky cards only fade: a transform would break the stacking */
+.ox-rv.ox-rv--fade {
+  transform: none;
+}

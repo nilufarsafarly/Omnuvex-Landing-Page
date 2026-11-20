@@ -1,0 +1,254 @@
+---
+/**
+ * One testimonial card. Desktop: a panel of the hover accordion (Testimonials.astro drives
+ * `.is-open` and the hit button). Below 1024: the full quote, card hugs its content, logo on
+ * the rating-dots line.
+ */
+import type { Quote } from '../../data/quotes';
+
+type Props = {
+  quote: Quote;
+  open?: boolean;
+};
+
+const { quote: q, open = false } = Astro.props;
+---
+
+<li class:list={['ox-quote', open && 'is-open']}>
+  <figure class="contents">
+    <div class="ox-quote-top flex items-center justify-between">
+      <span class="ox-quote-rate flex gap-1.5" role="img" aria-label="Rated 5 out of 5"
+        ><i></i><i></i><i></i><i></i><i></i></span
+      >
+      <span class="ox-quote-tog hidden size-8 items-center justify-center rounded-full bg-mist text-ink lg:flex" aria-hidden="true"
+        ><svg class="ox-plus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          ><path d="M12 5v14M5 12h14"></path></svg
+        ><svg class="ox-minus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          ><path d="M5 12h14"></path></svg
+        ></span
+      >
+    </div>
+    <blockquote class="ox-quote-text relative mx-0 mt-6 mb-0 font-medium">
+      <p class="ox-quote-lg">“{q.text}”</p><p class="ox-quote-sm" aria-hidden="true">“{q.text}”</p>
+    </blockquote>
+    <figcaption class="ox-quote-foot static mt-8 flex items-center gap-4 lg:relative lg:mt-auto">
+      <div class="ox-quote-who flex min-w-0 items-center gap-3">
+        <span class="ox-quote-ava flex size-10 flex-none items-center justify-center rounded-full bg-mist text-ui font-semibold text-graphite" aria-hidden="true">
+          {q.initials}
+        </span>
+        <div>
+          <p class="ox-quote-name m-0 text-ui font-semibold whitespace-nowrap">{q.name}</p>
+          <p class="ox-quote-role mt-0.5 mb-0 text-caption">{q.role}</p>
+        </div>
+      </div>
+      <img class="ox-quote-logo" src={q.logo} alt={q.company} style={`height: ${q.logoH}px`} />
+    </figcaption>
+  </figure>
+  <button class="ox-quote-hit" type="button" aria-label={`Show the quote from ${q.name}`} hidden={open}></button>
+</li>
+
+<style>
+  /* Phone + tablet: no accordion, every quote shows in full and each card hugs its content */
+  .ox-quote {
+    position: relative;
+    flex: none;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    box-sizing: border-box;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: flex-grow 800ms var(--ease-spring);
+  }
+
+  .ox-quote-rate i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-orange);
+  }
+
+  .ox-quote-tog .ox-minus {
+    display: none;
+  }
+  .is-open .ox-quote-tog .ox-minus {
+    display: block;
+  }
+  .is-open .ox-quote-tog .ox-plus {
+    display: none;
+  }
+
+  /* Two fixed-width copies of the quote crossfade on desktop, so the text never rewraps while the card resizes */
+  .ox-quote-sm {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 234px;
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--color-grey-400);
+    opacity: 1;
+    transition: opacity 350ms ease 150ms;
+  }
+  .ox-quote-lg {
+    position: static;
+    margin: 0;
+    width: auto;
+    font-size: 17px;
+    line-height: 26px;
+    color: var(--color-ink);
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+  }
+
+  .ox-quote-name {
+    color: var(--color-ink);
+  }
+  .ox-quote-role {
+    color: var(--color-secondary);
+  }
+
+  /* Company logo on the dots' line, pinned to the card's right edge and centred on the dots */
+  .ox-quote-logo {
+    position: absolute;
+    top: 29px;
+    right: 24px;
+    bottom: auto;
+    margin: 0;
+    flex: none;
+    display: block;
+    width: auto;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+  }
+  @media (width < 64rem) {
+    .ox-quote:nth-child(1) .ox-quote-logo {
+      height: 19px !important;
+    }
+    .ox-quote:nth-child(2) .ox-quote-logo {
+      height: 16px !important;
+    }
+    .ox-quote:nth-child(3) .ox-quote-logo {
+      height: 17px !important;
+    }
+  }
+
+  .ox-quote-hit {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+  .ox-quote-hit:focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: -2px;
+  }
+
+  @media (width >= 48rem) {
+    .ox-quote-lg {
+      font-size: 19px;
+      line-height: 28px;
+    }
+  }
+
+  /* Desktop: hover accordion. The open quote widens with the client logo; the others stay narrow and muted */
+  @media (width >= 64rem) {
+    .ox-quote {
+      flex: 1 1 0;
+      min-height: auto;
+    }
+    .ox-quote.is-open {
+      flex-grow: 2.2;
+    }
+
+    .ox-quote:not(.is-open) .ox-quote-rate i {
+      opacity: 0.45;
+    }
+
+    .ox-quote-sm {
+      display: block;
+    }
+    .ox-quote-lg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 548px;
+      font-size: 22px;
+      line-height: 32px;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .is-open .ox-quote-sm {
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+    .is-open .ox-quote-lg {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 450ms var(--ease-out) 150ms,
+        transform 650ms var(--ease-out) 150ms;
+    }
+
+    .ox-quote:not(.is-open) .ox-quote-name,
+    .ox-quote:not(.is-open) .ox-quote-role {
+      color: var(--color-grey-400);
+    }
+
+    /* The logo sits outside the text flow, so it never squeezes the name and role in the narrow cards */
+    .ox-quote-logo {
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin-block: auto;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .is-open .ox-quote-logo {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 450ms var(--ease-out) 200ms,
+        transform 650ms var(--ease-out) 200ms;
+    }
+
+    .ox-quote-hit {
+      display: block;
+    }
+  }
+
+  /* The open card's hit area is removed, like the canvas (rendered only while the card is closed) */
+  .ox-quote-hit[hidden] {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ox-quote,
+    .ox-quote-sm,
+    .ox-quote-lg,
+    .is-open .ox-quote-sm,
+    .is-open .ox-quote-lg,
+    .ox-quote-logo,
+    .is-open .ox-quote-logo,
+    .ox-quote-rate i {
+      transition: none;
+    }
+  }
+</style>

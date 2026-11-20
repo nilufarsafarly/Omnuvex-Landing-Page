@@ -1,0 +1,181 @@
+---
+/**
+ * Mobile menu panel (below 1024px). Rendered inside Header so it stays absolutely
+ * positioned under the bar. Header's script owns open/close: it toggles `.is-menu`
+ * on `.ox-head`, `aria-hidden` here, and closes on a link / CTA tap or Escape.
+ */
+import ActionButton from '../ui/ActionButton.astro';
+import LanguageSwitcher from '../ui/LanguageSwitcher.astro';
+
+const links = [
+  { label: 'Services', href: '#services' },
+  { label: 'Products', href: '#products' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Company', href: '#company' },
+];
+---
+
+<div id="ox-mnav" class="ox-mnav" aria-hidden="true">
+  <nav aria-label="Main mobile">
+    <ul class="ox-mnav-list" data-mnav-list>
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href}>{l.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="ox-mnav-foot">
+    <LanguageSwitcher variant="segmented" class="ox-mnav-lang" />
+    <ActionButton label="Book a free digital audit" href="#audit" size="lg" class="ox-mnav-cta" data-mnav-cta />
+  </div>
+</div>
+
+<style>
+  /* Floating grey panel under the bar; runs to the bottom of the screen, contents sit at the top */
+  .ox-mnav {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: var(--menu-inset);
+    right: var(--menu-inset);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    height: calc(100vh - var(--head-top) - var(--head-h) - 8px - var(--menu-inset));
+    height: calc(100dvh - var(--head-top) - var(--head-h) - 8px - var(--menu-inset));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 8px;
+    box-sizing: border-box;
+    background: var(--color-mist);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-floating);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+      opacity 200ms var(--ease-standard),
+      transform var(--dur-ui) var(--ease-standard),
+      visibility 0s linear var(--dur-ui);
+  }
+  :global(.ox-head.is-menu) .ox-mnav {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 200ms var(--ease-standard),
+      transform var(--dur-ui) var(--ease-standard),
+      visibility 0s;
+  }
+  .ox-mnav > :global(*) {
+    flex: none;
+  }
+
+  /* Links as separate white cards stacked on the grey panel, like the FAQ items */
+  .ox-mnav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: none;
+  }
+  .ox-mnav-list a {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0 24px;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-mnav-list a:hover {
+    color: var(--color-action);
+  }
+  .ox-mnav-list a:focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: -2px;
+  }
+
+  /* CTA and language switch pinned to the bottom of the panel as white controls.
+     Phone: each takes a full-width row; tablet: side by side, grouped on the left. */
+  .ox-mnav-foot {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: auto;
+    padding: 0;
+    background: none;
+  }
+
+  /* Both controls are 52px tall */
+  .ox-mnav-foot :global(.ox-mnav-lang) {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 52px;
+    padding: 4px;
+    box-sizing: border-box;
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+  }
+  .ox-mnav-foot :global(.ox-mnav-lang .ox-seg) {
+    flex: 1;
+    width: auto !important;
+    height: 44px !important;
+    font-size: 15px !important;
+    line-height: 22px !important;
+  }
+  .ox-mnav-foot :global(.ox-mnav-lang .ox-seg[aria-pressed='true']) {
+    background: var(--color-mist) !important;
+  }
+
+  /* CTA: ActionButton size="lg" (52px, 44px square) with a white shell; first in line */
+  .ox-mnav-foot :global(.ox-mnav-cta) {
+    order: -1;
+    flex: 1 1 100%;
+    justify-content: center;
+    padding: 0 24px 0 64px;
+    background: var(--color-white);
+  }
+
+  @media (width >= 48rem) {
+    .ox-mnav-foot :global(.ox-mnav-lang) {
+      flex: none;
+    }
+    .ox-mnav-foot :global(.ox-mnav-lang .ox-seg) {
+      flex: initial;
+      width: 44px !important;
+    }
+    .ox-mnav-foot :global(.ox-mnav-cta) {
+      flex: none;
+      justify-content: flex-start;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .ox-mnav {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ox-mnav,
+    :global(.ox-head.is-menu) .ox-mnav {
+      transition: none;
+    }
+  }
+</style>

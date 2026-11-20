@@ -1,0 +1,41 @@
+---
+/**
+ * One selected-work card. Desktop: full-bleed image with a dark panel on the right
+ * (4 of 10 columns). Below 1024px: 16:9 image above the panel. scripts/scroll.ts sets the
+ * card's transform as the next card slides over it.
+ */
+import ActionButton from '../ui/ActionButton.astro';
+import type { WorkItem } from '../../data/work';
+
+type Props = WorkItem;
+
+const { title, tag1, tag2, text, img, alt, imgStyle, mediaStyle } = Astro.props;
+---
+
+<article class="ox-work-card relative flex origin-top flex-col overflow-hidden rounded-md bg-ink will-change-transform lg:block lg:aspect-[1009/520] lg:max-h-[calc(100vh_-_var(--stick-top)_-_40px)] lg:min-h-[440px]">
+  <div class="ox-work-media relative aspect-video overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto lg:overflow-visible" style={mediaStyle || undefined}>
+    <img class="ox-work-img absolute top-0 left-0 block h-full w-full max-w-none object-cover" src={img} alt={alt} style={imgStyle || undefined} />
+  </div>
+  <div class="ox-work-panel box-border flex flex-col rounded-none bg-ink p-6 text-white md:min-h-[320px] md:p-8 lg:absolute lg:top-2 lg:right-2 lg:bottom-2 lg:min-h-auto lg:w-[calc((100%_+_24px)_/_10_*_4_-_24px)] lg:rounded-sm">
+    <ul class="ox-work-tags m-0 flex list-none flex-wrap gap-2 p-0">
+      <li class="rounded-sm bg-graphite px-[10px] py-1 text-caption font-medium text-white">{tag1}</li>
+      <li class="rounded-sm bg-graphite px-[10px] py-1 text-caption font-medium text-white">{tag2}</li>
+    </ul>
+    <h3 class="ox-work-title mt-8 mb-0 text-title-sm font-semibold text-white md:text-title">{title}</h3>
+    <p class="ox-work-text mt-3 mb-0 text-body-sm text-grey-300 md:text-body">{text}</p>
+    <div class="ox-work-foot mt-8 border-t border-white/12 pt-6 md:mt-auto">
+      <ActionButton label="View case study" href="#work" />
+    </div>
+  </div>
+</article>
+
+<style>
+  /* The case-study button spans the panel, label on the left */
+  .ox-work-panel :global(.ox-act) {
+    display: flex;
+    width: 100%;
+  }
+  .ox-work-panel :global(.ox-act:focus-visible) {
+    outline-color: var(--color-white);
+  }
+</style>

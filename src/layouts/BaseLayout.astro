@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const {
+  title = 'Omnuvex — AI automation, custom software and systems integration',
+  description = 'We help businesses in Azerbaijan and the region eliminate manual work, connect fragmented systems and turn AI into measurable business impact.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/logo/omnuvex.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" />
+  </head>
+  <body>
+    <!-- clips the hero hands that run past the right edge, without making the page scroll sideways (as in the canvas) -->
+    <div class="overflow-x-clip">
+      <slot />
+    </div>
+    <script>
+      import '../scripts/scroll';
+      import '../scripts/smooth-scroll';
+      import '../scripts/reveal';
+    </script>
+  </body>
+</html>

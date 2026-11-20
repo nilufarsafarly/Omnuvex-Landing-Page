@@ -1,0 +1,215 @@
+---
+/**
+ * Language switcher (canvas tweak `languageSwitcher`).
+ *   menu      — 48px "EN" button opening a 216px dropdown (menuitemradio rows: name, code, check)
+ *   segmented — AZ / RU / EN pill group
+ *   text      — AZ · RU · EN text buttons
+ * Every instance on the page stays in sync through scripts/lang.ts.
+ * Styles come from the canvas renderVals() segStyle / rowStyle / textStyle and the
+ * .ox-seg / .ox-langbtn / .ox-langitem rules.
+ */
+import { LANGS } from '../../scripts/lang';
+
+type Props = {
+  variant?: 'menu' | 'segmented' | 'text';
+  class?: string;
+};
+
+const { variant = 'menu', class: extra } = Astro.props;
+// Server render starts on English, like the canvas state (lang: 'en')
+const currentId = 'en';
+const current = LANGS.find((l) => l.id === currentId)!;
+---
+
+{
+  variant === 'menu' && (
+    <div class:list={['ox-lang relative', extra]} data-lang-switch="menu">
+      <button
+        class="ox-langbtn flex h-12 w-12 cursor-pointer items-center justify-center rounded-md border-0 bg-mist p-0 text-ui font-medium text-ink"
+        type="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-label={`Language: ${current.name}`}
+        data-lang-btn
+      >
+        <span data-lang-code>{current.code}</span>
+      </button>
+      <ul
+        role="menu"
+        aria-label="Language"
+        class="absolute top-14 right-0 z-20 flex w-[216px] list-none flex-col gap-1 rounded-md border border-hairline bg-white p-1 shadow-floating"
+        data-lang-menu
+        hidden
+      >
+        {LANGS.map((l) => (
+          <li role="none">
+            <button
+              class="ox-langitem flex h-10 w-full cursor-pointer items-center gap-3 rounded-sm border-0 px-3 text-ui font-medium text-ink"
+              type="button"
+              role="menuitemradio"
+              aria-checked={l.id === currentId ? 'true' : 'false'}
+              data-lang={l.id}
+            >
+              <span class="flex-1 text-left">{l.name}</span>
+              <span class="text-caption text-secondary">{l.code}</span>
+              <span class="flex w-4 justify-center">
+                <svg class="ox-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#25262A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12.5 10 17 19 7" />
+                </svg>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+{
+  variant === 'segmented' && (
+    <div role="group" aria-label="Language" class:list={['ox-lang ox-lang-seg flex h-12 items-center gap-0 rounded-md bg-mist p-1', extra]} data-lang-switch="segmented">
+      {LANGS.map((l) => (
+        <button
+          class="ox-seg flex h-10 w-11 cursor-pointer items-center justify-center rounded-sm border-0 p-0 text-caption font-medium"
+          type="button"
+          aria-pressed={l.id === currentId ? 'true' : 'false'}
+          aria-label={l.name}
+          data-lang={l.id}
+        >
+          {l.code}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+{
+  variant === 'text' && (
+    <div role="group" aria-label="Language" class:list={['ox-lang flex items-center gap-1 text-caption font-medium text-secondary', extra]} data-lang-switch="text">
+      {LANGS.map((l, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true">·</span>}
+          <button
+            class="ox-langtext cursor-pointer border-0 bg-none p-1 text-caption font-medium"
+            type="button"
+            aria-pressed={l.id === currentId ? 'true' : 'false'}
+            aria-label={l.name}
+            data-lang={l.id}
+          >
+            {l.code}
+          </button>
+        </>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  /* menu: trigger */
+  .ox-langbtn {
+    transition: background-color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-langbtn:hover {
+    background: var(--color-hairline);
+  }
+
+  /* menu: rows (rowStyle) */
+  .ox-langitem {
+    background: transparent;
+  }
+  .ox-langitem[aria-checked='true'] {
+    background: var(--color-mist);
+  }
+  .ox-langitem[aria-checked='false']:hover {
+    background: var(--color-mist);
+  }
+  .ox-langitem[aria-checked='false'] .ox-check {
+    display: none;
+  }
+
+  /* segmented (segStyle) */
+  .ox-seg {
+    transition:
+      background-color var(--dur-hover) var(--ease-standard),
+      color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-seg[aria-pressed='true'] {
+    background: var(--color-white);
+    color: var(--color-ink);
+  }
+  .ox-seg[aria-pressed='false'] {
+    background: transparent;
+    color: var(--color-secondary);
+  }
+  .ox-seg[aria-pressed='false']:hover {
+    color: var(--color-ink);
+  }
+
+  /* text (textStyle) */
+  .ox-langtext {
+    background: none;
+  }
+  .ox-langtext[aria-pressed='true'] {
+    color: var(--color-ink);
+  }
+  .ox-langtext[aria-pressed='false'] {
+    color: var(--color-secondary);
+  }
+</style>
+
+<script>
+  import { LANGS, setLang, onLang, type LangId } from '../../scripts/lang';
+
+  const roots = document.querySelectorAll<HTMLElement>('[data-lang-switch]');
+
+  roots.forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-lang-btn]');
+    const menu = root.querySelector<HTMLElement>('[data-lang-menu]');
+
+    const isOpen = () => !!menu && !menu.hidden;
+    const setOpen = (open: boolean) => {
+      if (!btn || !menu) return;
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((b) => {
+      b.addEventListener('click', () => {
+        setLang(b.dataset.lang as LangId);
+        // picking closes the menu, even when the language was already selected
+        setOpen(false);
+      });
+    });
+
+    if (btn && menu) {
+      btn.addEventListener('click', () => setOpen(!isOpen()));
+      // close on a click anywhere outside this switcher
+      document.addEventListener('click', (e) => {
+        if (isOpen() && !root.contains(e.target as Node)) setOpen(false);
+      });
+      // close on Escape; return focus to the trigger if it was inside the menu
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || !isOpen()) return;
+        const hadFocus = menu.contains(document.activeElement);
+        setOpen(false);
+        if (hadFocus) btn.focus();
+      });
+    }
+  });
+
+  onLang((id) => {
+    const current = LANGS.find((l) => l.id === id) ?? LANGS[2];
+    roots.forEach((root) => {
+      root.querySelectorAll<HTMLElement>('[data-lang]').forEach((b) => {
+        const on = b.dataset.lang === id ? 'true' : 'false';
+        b.setAttribute(b.getAttribute('role') === 'menuitemradio' ? 'aria-checked' : 'aria-pressed', on);
+      });
+      const btn = root.querySelector<HTMLElement>('[data-lang-btn]');
+      if (btn) {
+        btn.setAttribute('aria-label', `Language: ${current.name}`);
+        const code = btn.querySelector('[data-lang-code]');
+        if (code) code.textContent = current.code;
+      }
+    });
+  });
+</script>

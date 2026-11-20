@@ -1,0 +1,323 @@
+---
+/**
+ * One services card. Desktop: accordion panel (narrow with title + "Open", or wide with the
+ * full text when .is-active; Services.astro's script moves .is-active). Tablet: full card in a
+ * 2-column grid. Phone: no icon, number on the title line, sticky stacking cards (scroll.ts
+ * sets the transform). The line drawing and icon are picked by index, as in the canvas.
+ */
+type Props = {
+  index: number;
+  num: string;
+  title: string;
+  text: string;
+  active?: boolean;
+};
+
+const { index, num, title, text, active = false } = Astro.props;
+---
+
+<article class:list={['ox-svc', active && 'is-active']} data-svc-index={index}>
+  <span class="ox-svc-artwrap" aria-hidden="true">
+    {index === 0 && (
+      <svg class="ox-svc-art" preserveAspectRatio="xMaxYMax meet" viewBox="-150.8 -9.5 301.5 188.3" fill="none" stroke-width="1" aria-hidden="true"><path d="M-146.8,79.2 L-146.3,76.7 L-145.1,74.3 L-143.0,72.1 L-140.3,70.2 L-15.6,-1.8 L-12.2,-3.4 L-8.4,-4.6 L-4.3,-5.3 L-0.0,-5.5 L4.3,-5.3 L8.4,-4.6 L12.2,-3.4 L15.6,-1.8 L140.3,70.2 L143.0,72.1 L145.1,74.3 L146.3,76.7 L146.8,79.2 L146.8,90.0 L146.3,92.5 L145.1,94.9 L143.0,97.1 L140.3,99.0 L15.6,171.0 L12.2,172.6 L8.4,173.8 L4.3,174.5 L0.0,174.7 L-4.3,174.5 L-8.4,173.8 L-12.2,172.6 L-15.6,171.0 L-140.3,99.0 L-143.0,97.1 L-145.1,94.9 L-146.3,92.5 L-146.8,90.0 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="163.9" x2="0.0" y2="174.7" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M140.3,70.2 L143.0,72.1 L145.1,74.3 L146.3,76.7 L146.8,79.2 L146.3,81.7 L145.1,84.1 L143.0,86.3 L140.3,88.2 L15.6,160.2 L12.2,161.8 L8.4,163.0 L4.3,163.7 L0.0,163.9 L-4.3,163.7 L-8.4,163.0 L-12.2,161.8 L-15.6,160.2 L-140.3,88.2 L-143.0,86.3 L-145.1,84.1 L-146.3,81.7 L-146.8,79.2 L-146.3,76.7 L-145.1,74.3 L-143.0,72.1 L-140.3,70.2 L-15.6,-1.8 L-12.2,-3.4 L-8.4,-4.6 L-4.3,-5.3 L-0.0,-5.5 L4.3,-5.3 L8.4,-4.6 L12.2,-3.4 L15.6,-1.8 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><line x1="-109.1" y1="79.2" x2="0.0" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><line x1="0.0" y1="79.2" x2="109.1" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><line x1="-60.8" y1="83.2" x2="-49.9" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><line x1="-60.8" y1="75.2" x2="-49.9" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><line x1="71.7" y1="83.2" x2="82.6" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><line x1="71.7" y1="75.2" x2="82.6" y2="79.2" stroke="#62666E" stroke-linecap="round"></line><path d="M-129.3,64.8 L-129.2,63.9 L-128.7,63.1 L-128.0,62.3 L-127.0,61.7 L-114.6,54.4 L-113.4,53.9 L-112.1,53.5 L-110.6,53.2 L-109.1,53.1 L-107.6,53.2 L-106.2,53.5 L-104.8,53.9 L-103.7,54.4 L-91.2,61.7 L-90.2,62.3 L-89.5,63.1 L-89.1,63.9 L-88.9,64.8 L-88.9,79.2 L-89.1,80.1 L-89.5,80.9 L-90.2,81.7 L-91.2,82.3 L-103.7,89.6 L-104.8,90.1 L-106.2,90.5 L-107.6,90.8 L-109.1,90.9 L-110.6,90.8 L-112.1,90.5 L-113.4,90.1 L-114.6,89.6 L-127.0,82.3 L-128.0,81.7 L-128.7,80.9 L-129.2,80.1 L-129.3,79.2 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="-109.1" y1="76.5" x2="-109.1" y2="90.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M-91.2,61.7 L-90.2,62.3 L-89.5,63.1 L-89.1,63.9 L-88.9,64.8 L-89.1,65.7 L-89.5,66.5 L-90.2,67.3 L-91.2,67.9 L-103.7,75.2 L-104.8,75.7 L-106.2,76.1 L-107.6,76.4 L-109.1,76.5 L-110.6,76.4 L-112.1,76.1 L-113.4,75.7 L-114.6,75.2 L-127.0,67.9 L-128.0,67.3 L-128.7,66.5 L-129.2,65.7 L-129.3,64.8 L-129.2,63.9 L-128.7,63.1 L-128.0,62.3 L-127.0,61.7 L-114.6,54.4 L-113.4,53.9 L-112.1,53.5 L-110.6,53.2 L-109.1,53.1 L-107.6,53.2 L-106.2,53.5 L-104.8,53.9 L-103.7,54.4 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="-99.0" cy="80.4" r="1.05" fill="#C9CBCF"></circle><path d="M-41.7,52.2 L-41.5,50.8 L-40.8,49.5 L-39.7,48.3 L-38.2,47.2 L-8.6,30.1 L-6.7,29.3 L-4.6,28.6 L-2.4,28.2 L0.0,28.1 L2.4,28.2 L4.6,28.6 L6.7,29.3 L8.6,30.1 L38.2,47.2 L39.7,48.3 L40.8,49.5 L41.5,50.8 L41.7,52.2 L41.7,79.2 L41.5,80.6 L40.8,81.9 L39.7,83.1 L38.2,84.2 L8.6,101.2 L6.7,102.1 L4.6,102.8 L2.4,103.2 L0.0,103.3 L-2.4,103.2 L-4.6,102.8 L-6.7,102.1 L-8.6,101.2 L-38.2,84.2 L-39.7,83.1 L-40.8,81.9 L-41.5,80.6 L-41.7,79.2 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="76.3" x2="0.0" y2="103.3" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M38.2,47.2 L39.7,48.3 L40.8,49.5 L41.5,50.8 L41.7,52.2 L41.5,53.6 L40.8,54.9 L39.7,56.1 L38.2,57.1 L8.6,74.2 L6.7,75.1 L4.6,75.8 L2.4,76.2 L0.0,76.3 L-2.4,76.2 L-4.6,75.8 L-6.7,75.1 L-8.6,74.2 L-38.2,57.1 L-39.7,56.1 L-40.8,54.9 L-41.5,53.6 L-41.7,52.2 L-41.5,50.8 L-40.8,49.5 L-39.7,48.3 L-38.2,47.2 L-8.6,30.1 L-6.7,29.3 L-4.6,28.6 L-2.4,28.2 L0.0,28.1 L2.4,28.2 L4.6,28.6 L6.7,29.3 L8.6,30.1 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="33.7" r="0.8" fill="#C9CBCF"></circle><circle cx="32.0" cy="52.2" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="70.7" r="0.8" fill="#C9CBCF"></circle><circle cx="-32.0" cy="52.2" r="0.8" fill="#C9CBCF"></circle><circle cx="13.3" cy="91.4" r="1.05" fill="#E75416"></circle><circle cx="19.5" cy="87.8" r="1.05" fill="#E75416"></circle><circle cx="25.7" cy="84.2" r="1.05" fill="#C9CBCF"></circle><ellipse cx="0.0" cy="52.2" rx="23.1" ry="13.4" fill="none" stroke="#E75416" stroke-dasharray="2 3"></ellipse><circle cx="0.0" cy="52.2" r="2.6" fill="#E75416"></circle><path d="M88.9,64.8 L89.1,63.9 L89.5,63.1 L90.2,62.3 L91.2,61.7 L103.7,54.4 L104.8,53.9 L106.2,53.5 L107.6,53.2 L109.1,53.1 L110.6,53.2 L112.1,53.5 L113.4,53.9 L114.6,54.4 L127.0,61.7 L128.0,62.3 L128.7,63.1 L129.2,63.9 L129.3,64.8 L129.3,79.2 L129.2,80.1 L128.7,80.9 L128.0,81.7 L127.0,82.3 L114.6,89.6 L113.4,90.1 L112.1,90.5 L110.6,90.8 L109.1,90.9 L107.6,90.8 L106.2,90.5 L104.8,90.1 L103.7,89.6 L91.2,82.3 L90.2,81.7 L89.5,80.9 L89.1,80.1 L88.9,79.2 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="109.1" y1="76.5" x2="109.1" y2="90.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M127.0,61.7 L128.0,62.3 L128.7,63.1 L129.2,63.9 L129.3,64.8 L129.2,65.7 L128.7,66.5 L128.0,67.3 L127.0,67.9 L114.6,75.2 L113.4,75.7 L112.1,76.1 L110.6,76.4 L109.1,76.5 L107.6,76.4 L106.2,76.1 L104.8,75.7 L103.7,75.2 L91.2,67.9 L90.2,67.3 L89.5,66.5 L89.1,65.7 L88.9,64.8 L89.1,63.9 L89.5,63.1 L90.2,62.3 L91.2,61.7 L103.7,54.4 L104.8,53.9 L106.2,53.5 L107.6,53.2 L109.1,53.1 L110.6,53.2 L112.1,53.5 L113.4,53.9 L114.6,54.4 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="119.3" cy="80.4" r="1.05" fill="#E75416"></circle></svg>
+    )}
+    {index === 1 && (
+      <svg class="ox-svc-art ox-svc-art-dense" preserveAspectRatio="xMaxYMax meet" viewBox="-90.2 -64.6 180.5 172.4" fill="none" stroke-width="1" aria-hidden="true"><path d="M-86.2,43.2 L-85.9,41.2 L-84.9,39.3 L-83.3,37.5 L-81.1,36.0 L-12.5,-3.6 L-9.8,-4.9 L-6.7,-5.8 L-3.4,-6.4 L-0.0,-6.6 L3.4,-6.4 L6.7,-5.8 L9.8,-4.9 L12.5,-3.6 L81.1,36.0 L83.3,37.5 L84.9,39.3 L85.9,41.2 L86.2,43.2 L86.2,54.0 L85.9,56.0 L84.9,57.9 L83.3,59.7 L81.1,61.2 L12.5,100.8 L9.8,102.1 L6.7,103.0 L3.4,103.6 L0.0,103.8 L-3.4,103.6 L-6.7,103.0 L-9.8,102.1 L-12.5,100.8 L-81.1,61.2 L-83.3,59.7 L-84.9,57.9 L-85.9,56.0 L-86.2,54.0 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="93.0" x2="0.0" y2="103.8" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M81.1,36.0 L83.3,37.5 L84.9,39.3 L85.9,41.2 L86.2,43.2 L85.9,45.2 L84.9,47.1 L83.3,48.9 L81.1,50.4 L12.5,90.0 L9.8,91.3 L6.7,92.2 L3.4,92.8 L0.0,93.0 L-3.4,92.8 L-6.7,92.2 L-9.8,91.3 L-12.5,90.0 L-81.1,50.4 L-83.3,48.9 L-84.9,47.1 L-85.9,45.2 L-86.2,43.2 L-85.9,41.2 L-84.9,39.3 L-83.3,37.5 L-81.1,36.0 L-12.5,-3.6 L-9.8,-4.9 L-6.7,-5.8 L-3.4,-6.4 L-0.0,-6.6 L3.4,-6.4 L6.7,-5.8 L9.8,-4.9 L12.5,-3.6 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="-0.3" r="0.8" fill="#C9CBCF"></circle><circle cx="75.3" cy="43.2" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="86.7" r="0.8" fill="#C9CBCF"></circle><circle cx="-75.3" cy="43.2" r="0.8" fill="#C9CBCF"></circle><circle cx="17.1" cy="93.2" r="1.05" fill="#C9CBCF"></circle><circle cx="23.4" cy="89.6" r="1.05" fill="#C9CBCF"></circle><circle cx="29.6" cy="86.0" r="1.05" fill="#C9CBCF"></circle><line x1="0.0" y1="0.0" x2="0.0" y2="-16.2" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="74.8" y1="43.2" x2="74.8" y2="27.0" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="0.0" y1="86.4" x2="0.0" y2="70.2" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="-74.8" y1="43.2" x2="-74.8" y2="27.0" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><path d="M-86.2,16.2 L-85.9,14.2 L-84.9,12.3 L-83.3,10.5 L-81.1,9.0 L-12.5,-30.6 L-9.8,-31.9 L-6.7,-32.8 L-3.4,-33.4 L-0.0,-33.6 L3.4,-33.4 L6.7,-32.8 L9.8,-31.9 L12.5,-30.6 L81.1,9.0 L83.3,10.5 L84.9,12.3 L85.9,14.2 L86.2,16.2 L86.2,27.0 L85.9,29.0 L84.9,30.9 L83.3,32.7 L81.1,34.2 L12.5,73.8 L9.8,75.1 L6.7,76.0 L3.4,76.6 L0.0,76.8 L-3.4,76.6 L-6.7,76.0 L-9.8,75.1 L-12.5,73.8 L-81.1,34.2 L-83.3,32.7 L-84.9,30.9 L-85.9,29.0 L-86.2,27.0 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="66.0" x2="0.0" y2="76.8" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M81.1,9.0 L83.3,10.5 L84.9,12.3 L85.9,14.2 L86.2,16.2 L85.9,18.2 L84.9,20.1 L83.3,21.9 L81.1,23.4 L12.5,63.0 L9.8,64.3 L6.7,65.2 L3.4,65.8 L0.0,66.0 L-3.4,65.8 L-6.7,65.2 L-9.8,64.3 L-12.5,63.0 L-81.1,23.4 L-83.3,21.9 L-84.9,20.1 L-85.9,18.2 L-86.2,16.2 L-85.9,14.2 L-84.9,12.3 L-83.3,10.5 L-81.1,9.0 L-12.5,-30.6 L-9.8,-31.9 L-6.7,-32.8 L-3.4,-33.4 L-0.0,-33.6 L3.4,-33.4 L6.7,-32.8 L9.8,-31.9 L12.5,-30.6 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="-27.3" r="0.8" fill="#C9CBCF"></circle><circle cx="75.3" cy="16.2" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="59.7" r="0.8" fill="#C9CBCF"></circle><circle cx="-75.3" cy="16.2" r="0.8" fill="#C9CBCF"></circle><circle cx="17.1" cy="66.2" r="1.05" fill="#C9CBCF"></circle><circle cx="23.4" cy="62.6" r="1.05" fill="#C9CBCF"></circle><circle cx="29.6" cy="59.0" r="1.05" fill="#C9CBCF"></circle><line x1="0.0" y1="-27.0" x2="0.0" y2="-43.2" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="74.8" y1="16.2" x2="74.8" y2="0.0" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="0.0" y1="59.4" x2="0.0" y2="43.2" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="-74.8" y1="16.2" x2="-74.8" y2="0.0" stroke="#C9CBCF" stroke-linecap="round" stroke-dasharray="2 3"></line><path d="M-86.2,-10.8 L-85.9,-12.8 L-84.9,-14.7 L-83.3,-16.5 L-81.1,-18.0 L-12.5,-57.6 L-9.8,-58.9 L-6.7,-59.8 L-3.4,-60.4 L-0.0,-60.6 L3.4,-60.4 L6.7,-59.8 L9.8,-58.9 L12.5,-57.6 L81.1,-18.0 L83.3,-16.5 L84.9,-14.7 L85.9,-12.8 L86.2,-10.8 L86.2,0.0 L85.9,2.0 L84.9,3.9 L83.3,5.7 L81.1,7.2 L12.5,46.8 L9.8,48.1 L6.7,49.0 L3.4,49.6 L0.0,49.8 L-3.4,49.6 L-6.7,49.0 L-9.8,48.1 L-12.5,46.8 L-81.1,7.2 L-83.3,5.7 L-84.9,3.9 L-85.9,2.0 L-86.2,0.0 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="39.0" x2="0.0" y2="49.8" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M81.1,-18.0 L83.3,-16.5 L84.9,-14.7 L85.9,-12.8 L86.2,-10.8 L85.9,-8.8 L84.9,-6.9 L83.3,-5.1 L81.1,-3.6 L12.5,36.0 L9.8,37.3 L6.7,38.2 L3.4,38.8 L0.0,39.0 L-3.4,38.8 L-6.7,38.2 L-9.8,37.3 L-12.5,36.0 L-81.1,-3.6 L-83.3,-5.1 L-84.9,-6.9 L-85.9,-8.8 L-86.2,-10.8 L-85.9,-12.8 L-84.9,-14.7 L-83.3,-16.5 L-81.1,-18.0 L-12.5,-57.6 L-9.8,-58.9 L-6.7,-59.8 L-3.4,-60.4 L-0.0,-60.6 L3.4,-60.4 L6.7,-59.8 L9.8,-58.9 L12.5,-57.6 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="-54.3" r="0.8" fill="#C9CBCF"></circle><circle cx="75.3" cy="-10.8" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="32.7" r="0.8" fill="#C9CBCF"></circle><circle cx="-75.3" cy="-10.8" r="0.8" fill="#C9CBCF"></circle><circle cx="17.1" cy="39.2" r="1.05" fill="#E75416"></circle><circle cx="23.4" cy="35.6" r="1.05" fill="#C9CBCF"></circle><circle cx="29.6" cy="32.0" r="1.05" fill="#C9CBCF"></circle><line x1="0.0" y1="-43.2" x2="35.9" y2="-22.5" stroke="#62666E" stroke-linecap="round" stroke-width="1.5"></line><line x1="-7.8" y1="-31.5" x2="34.3" y2="-7.2" stroke="#E75416" stroke-linecap="round" stroke-width="1.5"></line><line x1="-21.8" y1="-23.4" x2="6.2" y2="-7.2" stroke="#62666E" stroke-linecap="round" stroke-width="1.5"></line><line x1="-42.1" y1="-18.9" x2="6.2" y2="9.0" stroke="#62666E" stroke-linecap="round" stroke-width="1.5"></line><line x1="-56.1" y1="-10.8" x2="-34.3" y2="1.8" stroke="#62666E" stroke-linecap="round" stroke-width="1.5"></line></svg>
+    )}
+    {index === 2 && (
+      <svg class="ox-svc-art" preserveAspectRatio="xMaxYMax meet" viewBox="-148.5 -19.6 296.9 183.5" fill="none" stroke-width="1" aria-hidden="true"><path d="M136.4,65.2 L139.8,67.7 L142.4,70.4 L143.9,73.4 L144.5,76.5 L143.9,79.6 L142.4,82.6 L139.8,85.3 L136.4,87.8 L19.5,155.2 L15.3,157.2 L10.5,158.7 L5.4,159.6 L0.0,159.9 L-5.4,159.6 L-10.5,158.7 L-15.3,157.2 L-19.5,155.2 L-136.4,87.8 L-139.8,85.3 L-142.4,82.6 L-143.9,79.6 L-144.5,76.5 L-143.9,73.4 L-142.4,70.4 L-139.8,67.7 L-136.4,65.2 L-19.5,-2.2 L-15.3,-4.2 L-10.5,-5.7 L-5.4,-6.6 L-0.0,-6.9 L5.4,-6.6 L10.5,-5.7 L15.3,-4.2 L19.5,-2.3 Z" fill="none" stroke="#C9CBCF" stroke-dasharray="2 3"></path><line x1="0.0" y1="22.5" x2="0.0" y2="76.5" stroke="#62666E" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="93.5" y1="76.5" x2="0.0" y2="76.5" stroke="#62666E" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="-93.5" y1="76.5" x2="0.0" y2="76.5" stroke="#62666E" stroke-linecap="round" stroke-dasharray="2 3"></line><line x1="0.0" y1="130.5" x2="0.0" y2="76.5" stroke="#62666E" stroke-linecap="round" stroke-dasharray="2 3"></line><path d="M-34.9,4.5 L-34.7,3.4 L-34.1,2.3 L-33.2,1.3 L-32.0,0.4 L-7.0,-13.9 L-5.5,-14.7 L-3.8,-15.2 L-1.9,-15.5 L-0.0,-15.6 L1.9,-15.5 L3.8,-15.2 L5.5,-14.7 L7.0,-13.9 L32.0,0.4 L33.2,1.3 L34.1,2.3 L34.7,3.4 L34.9,4.5 L34.9,22.5 L34.7,23.6 L34.1,24.7 L33.2,25.7 L32.0,26.6 L7.0,40.9 L5.5,41.7 L3.8,42.2 L1.9,42.5 L0.0,42.6 L-1.9,42.5 L-3.8,42.2 L-5.5,41.7 L-7.0,40.9 L-32.0,26.6 L-33.2,25.7 L-34.1,24.7 L-34.7,23.6 L-34.9,22.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="24.6" x2="0.0" y2="42.6" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M32.0,0.4 L33.2,1.3 L34.1,2.3 L34.7,3.4 L34.9,4.5 L34.7,5.6 L34.1,6.7 L33.2,7.7 L32.0,8.6 L7.0,22.9 L5.5,23.7 L3.8,24.2 L1.9,24.5 L0.0,24.6 L-1.9,24.5 L-3.8,24.2 L-5.5,23.7 L-7.0,22.9 L-32.0,8.6 L-33.2,7.7 L-34.1,6.7 L-34.7,5.6 L-34.9,4.5 L-34.7,3.4 L-34.1,2.3 L-33.2,1.3 L-32.0,0.4 L-7.0,-13.9 L-5.5,-14.7 L-3.8,-15.2 L-1.9,-15.5 L-0.0,-15.6 L1.9,-15.5 L3.8,-15.2 L5.5,-14.7 L7.0,-13.9 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="-10.3" r="0.8" fill="#C9CBCF"></circle><circle cx="25.6" cy="4.5" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="19.3" r="0.8" fill="#C9CBCF"></circle><circle cx="-25.6" cy="4.5" r="0.8" fill="#C9CBCF"></circle><circle cx="11.7" cy="31.1" r="1.05" fill="#E75416"></circle><circle cx="17.9" cy="27.4" r="1.05" fill="#C9CBCF"></circle><circle cx="24.2" cy="23.8" r="1.05" fill="#C9CBCF"></circle><path d="M58.7,58.5 L58.9,57.4 L59.4,56.3 L60.3,55.3 L61.6,54.5 L86.5,40.1 L88.0,39.3 L89.7,38.8 L91.6,38.5 L93.5,38.4 L95.5,38.5 L97.3,38.8 L99.0,39.3 L100.5,40.1 L125.5,54.5 L126.7,55.3 L127.6,56.3 L128.2,57.4 L128.4,58.5 L128.4,76.5 L128.2,77.6 L127.6,78.7 L126.7,79.7 L125.5,80.5 L100.5,95.0 L99.0,95.7 L97.3,96.2 L95.5,96.5 L93.5,96.6 L91.6,96.5 L89.7,96.2 L88.0,95.7 L86.5,95.0 L61.6,80.5 L60.3,79.7 L59.4,78.7 L58.9,77.6 L58.7,76.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="93.5" y1="78.6" x2="93.5" y2="96.6" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M125.5,54.5 L126.7,55.3 L127.6,56.3 L128.2,57.4 L128.4,58.5 L128.2,59.6 L127.6,60.7 L126.7,61.7 L125.5,62.5 L100.5,77.0 L99.0,77.7 L97.3,78.2 L95.5,78.5 L93.5,78.6 L91.6,78.5 L89.7,78.2 L88.0,77.7 L86.5,77.0 L61.6,62.5 L60.3,61.7 L59.4,60.7 L58.9,59.6 L58.7,58.5 L58.9,57.4 L59.4,56.3 L60.3,55.3 L61.6,54.5 L86.5,40.1 L88.0,39.3 L89.7,38.8 L91.6,38.5 L93.5,38.4 L95.5,38.5 L97.3,38.8 L99.0,39.3 L100.5,40.1 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="93.5" cy="43.7" r="0.8" fill="#C9CBCF"></circle><circle cx="119.2" cy="58.5" r="0.8" fill="#C9CBCF"></circle><circle cx="93.5" cy="73.3" r="0.8" fill="#C9CBCF"></circle><circle cx="67.9" cy="58.5" r="0.8" fill="#C9CBCF"></circle><circle cx="105.2" cy="85.0" r="1.05" fill="#E75416"></circle><circle cx="111.5" cy="81.4" r="1.05" fill="#E75416"></circle><circle cx="117.7" cy="77.8" r="1.05" fill="#C9CBCF"></circle><path d="M-128.4,58.5 L-128.2,57.4 L-127.6,56.3 L-126.7,55.3 L-125.5,54.5 L-100.5,40.1 L-99.0,39.3 L-97.3,38.8 L-95.5,38.5 L-93.5,38.4 L-91.6,38.5 L-89.7,38.8 L-88.0,39.3 L-86.5,40.1 L-61.6,54.5 L-60.3,55.3 L-59.4,56.3 L-58.9,57.4 L-58.7,58.5 L-58.7,76.5 L-58.9,77.6 L-59.4,78.7 L-60.3,79.7 L-61.6,80.5 L-86.5,95.0 L-88.0,95.7 L-89.7,96.2 L-91.6,96.5 L-93.5,96.6 L-95.5,96.5 L-97.3,96.2 L-99.0,95.7 L-100.5,95.0 L-125.5,80.5 L-126.7,79.7 L-127.6,78.7 L-128.2,77.6 L-128.4,76.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="-93.5" y1="78.6" x2="-93.5" y2="96.6" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M-61.6,54.5 L-60.3,55.3 L-59.4,56.3 L-58.9,57.4 L-58.7,58.5 L-58.9,59.6 L-59.4,60.7 L-60.3,61.7 L-61.6,62.5 L-86.5,77.0 L-88.0,77.7 L-89.7,78.2 L-91.6,78.5 L-93.5,78.6 L-95.5,78.5 L-97.3,78.2 L-99.0,77.7 L-100.5,77.0 L-125.5,62.5 L-126.7,61.7 L-127.6,60.7 L-128.2,59.6 L-128.4,58.5 L-128.2,57.4 L-127.6,56.3 L-126.7,55.3 L-125.5,54.5 L-100.5,40.1 L-99.0,39.3 L-97.3,38.8 L-95.5,38.5 L-93.5,38.4 L-91.6,38.5 L-89.7,38.8 L-88.0,39.3 L-86.5,40.1 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="-93.5" cy="43.7" r="0.8" fill="#C9CBCF"></circle><circle cx="-67.9" cy="58.5" r="0.8" fill="#C9CBCF"></circle><circle cx="-93.5" cy="73.3" r="0.8" fill="#C9CBCF"></circle><circle cx="-119.2" cy="58.5" r="0.8" fill="#C9CBCF"></circle><circle cx="-81.8" cy="85.0" r="1.05" fill="#E75416"></circle><circle cx="-75.6" cy="81.5" r="1.05" fill="#C9CBCF"></circle><circle cx="-69.4" cy="77.9" r="1.05" fill="#C9CBCF"></circle><path d="M-20.2,68.4 L-20.0,67.5 L-19.6,66.7 L-18.9,65.9 L-17.9,65.3 L-5.5,58.0 L-4.3,57.5 L-3.0,57.1 L-1.5,56.8 L0.0,56.7 L1.5,56.8 L3.0,57.1 L4.3,57.5 L5.5,58.0 L17.9,65.3 L18.9,65.9 L19.6,66.7 L20.0,67.5 L20.2,68.4 L20.2,76.5 L20.0,77.4 L19.6,78.2 L18.9,79.0 L17.9,79.6 L5.5,86.9 L4.3,87.4 L3.0,87.8 L1.5,88.1 L0.0,88.2 L-1.5,88.1 L-3.0,87.8 L-4.3,87.4 L-5.5,86.9 L-17.9,79.6 L-18.9,79.0 L-19.6,78.2 L-20.0,77.4 L-20.2,76.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="80.1" x2="0.0" y2="88.2" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M17.9,65.3 L18.9,65.9 L19.6,66.7 L20.0,67.5 L20.2,68.4 L20.0,69.3 L19.6,70.1 L18.9,70.9 L17.9,71.5 L5.5,78.8 L4.3,79.3 L3.0,79.7 L1.5,80.0 L0.0,80.1 L-1.5,80.0 L-3.0,79.7 L-4.3,79.3 L-5.5,78.8 L-17.9,71.5 L-18.9,70.9 L-19.6,70.1 L-20.0,69.3 L-20.2,68.4 L-20.0,67.5 L-19.6,66.7 L-18.9,65.9 L-17.9,65.3 L-5.5,58.0 L-4.3,57.5 L-3.0,57.1 L-1.5,56.8 L0.0,56.7 L1.5,56.8 L3.0,57.1 L4.3,57.5 L5.5,58.0 Z" fill="#E75416" stroke="#62666E" stroke-linejoin="round"></path><path d="M-34.9,112.5 L-34.7,111.4 L-34.1,110.3 L-33.2,109.3 L-32.0,108.5 L-7.0,94.0 L-5.5,93.3 L-3.8,92.8 L-1.9,92.5 L0.0,92.4 L1.9,92.5 L3.8,92.8 L5.5,93.3 L7.0,94.0 L32.0,108.5 L33.2,109.3 L34.1,110.3 L34.7,111.4 L34.9,112.5 L34.9,130.5 L34.7,131.6 L34.1,132.7 L33.2,133.7 L32.0,134.5 L7.0,149.0 L5.5,149.7 L3.8,150.2 L1.9,150.5 L0.0,150.6 L-1.9,150.5 L-3.8,150.2 L-5.5,149.7 L-7.0,149.0 L-32.0,134.5 L-33.2,133.7 L-34.1,132.7 L-34.7,131.6 L-34.9,130.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="132.6" x2="0.0" y2="150.6" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M32.0,108.5 L33.2,109.3 L34.1,110.3 L34.7,111.4 L34.9,112.5 L34.7,113.6 L34.1,114.7 L33.2,115.7 L32.0,116.5 L7.0,131.0 L5.5,131.7 L3.8,132.2 L1.9,132.5 L0.0,132.6 L-1.9,132.5 L-3.8,132.2 L-5.5,131.7 L-7.0,131.0 L-32.0,116.5 L-33.2,115.7 L-34.1,114.7 L-34.7,113.6 L-34.9,112.5 L-34.7,111.4 L-34.1,110.3 L-33.2,109.3 L-32.0,108.5 L-7.0,94.0 L-5.5,93.3 L-3.8,92.8 L-1.9,92.5 L0.0,92.4 L1.9,92.5 L3.8,92.8 L5.5,93.3 L7.0,94.0 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><circle cx="0.0" cy="97.7" r="0.8" fill="#C9CBCF"></circle><circle cx="25.6" cy="112.5" r="0.8" fill="#C9CBCF"></circle><circle cx="0.0" cy="127.3" r="0.8" fill="#C9CBCF"></circle><circle cx="-25.6" cy="112.5" r="0.8" fill="#C9CBCF"></circle><circle cx="11.7" cy="139.1" r="1.05" fill="#E75416"></circle><circle cx="17.9" cy="135.5" r="1.05" fill="#E75416"></circle><circle cx="24.2" cy="131.9" r="1.05" fill="#E75416"></circle></svg>
+    )}
+    {index === 3 && (
+      <svg class="ox-svc-art" preserveAspectRatio="xMaxYMax meet" viewBox="-111.8 -24.2 223.6 157.9" fill="none" stroke-width="1" aria-hidden="true"><path d="M-107.8,58.5 L-107.4,56.0 L-106.1,53.6 L-104.1,51.4 L-101.3,49.5 L-15.6,0.0 L-12.2,-1.6 L-8.4,-2.8 L-4.3,-3.5 L-0.0,-3.7 L4.3,-3.5 L8.4,-2.8 L12.2,-1.6 L15.6,-0.0 L101.3,49.5 L104.1,51.4 L106.1,53.6 L107.4,56.0 L107.8,58.5 L107.8,67.5 L107.4,70.0 L106.1,72.4 L104.1,74.6 L101.3,76.5 L15.6,126.0 L12.2,127.6 L8.4,128.8 L4.3,129.5 L0.0,129.7 L-4.3,129.5 L-8.4,128.8 L-12.2,127.6 L-15.6,126.0 L-101.3,76.5 L-104.1,74.6 L-106.1,72.4 L-107.4,70.0 L-107.8,67.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="0.0" y1="120.7" x2="0.0" y2="129.7" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M101.3,49.5 L104.1,51.4 L106.1,53.6 L107.4,56.0 L107.8,58.5 L107.4,61.0 L106.1,63.4 L104.1,65.6 L101.3,67.5 L15.6,117.0 L12.2,118.6 L8.4,119.8 L4.3,120.5 L0.0,120.7 L-4.3,120.5 L-8.4,119.8 L-12.2,118.6 L-15.6,117.0 L-101.3,67.5 L-104.1,65.6 L-106.1,63.4 L-107.4,61.0 L-107.8,58.5 L-107.4,56.0 L-106.1,53.6 L-104.1,51.4 L-101.3,49.5 L-15.6,0.0 L-12.2,-1.6 L-8.4,-2.8 L-4.3,-3.5 L-0.0,-3.7 L4.3,-3.5 L8.4,-2.8 L12.2,-1.6 L15.6,-0.0 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><path d="M-83.0,40.5 L-82.9,39.8 L-82.5,39.0 L-81.9,38.4 L-81.1,37.8 L-74.8,34.2 L-73.8,33.7 L-72.7,33.4 L-71.4,33.2 L-70.1,33.1 L-68.9,33.2 L-67.6,33.4 L-66.5,33.7 L-65.5,34.2 L-59.2,37.8 L-58.4,38.4 L-57.8,39.0 L-57.4,39.8 L-57.3,40.5 L-57.3,58.5 L-57.4,59.2 L-57.8,60.0 L-58.4,60.6 L-59.2,61.2 L-65.5,64.8 L-66.5,65.3 L-67.6,65.6 L-68.9,65.8 L-70.1,65.9 L-71.4,65.8 L-72.7,65.6 L-73.8,65.3 L-74.8,64.8 L-81.1,61.2 L-81.9,60.6 L-82.5,60.0 L-82.9,59.2 L-83.0,58.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="-70.1" y1="47.9" x2="-70.1" y2="65.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M-59.2,37.8 L-58.4,38.4 L-57.8,39.0 L-57.4,39.8 L-57.3,40.5 L-57.4,41.2 L-57.8,42.0 L-58.4,42.6 L-59.2,43.2 L-65.5,46.8 L-66.5,47.3 L-67.6,47.6 L-68.9,47.8 L-70.1,47.9 L-71.4,47.8 L-72.7,47.6 L-73.8,47.3 L-74.8,46.8 L-81.1,43.2 L-81.9,42.6 L-82.5,42.0 L-82.9,41.2 L-83.0,40.5 L-82.9,39.8 L-82.5,39.0 L-81.9,38.4 L-81.1,37.8 L-74.8,34.2 L-73.8,33.7 L-72.7,33.4 L-71.4,33.2 L-70.1,33.1 L-68.9,33.2 L-67.6,33.4 L-66.5,33.7 L-65.5,34.2 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><path d="M-39.3,27.9 L-39.2,27.2 L-38.8,26.4 L-38.2,25.8 L-37.4,25.2 L-31.2,21.6 L-30.2,21.1 L-29.0,20.8 L-27.8,20.6 L-26.5,20.5 L-25.2,20.6 L-24.0,20.8 L-22.8,21.1 L-21.8,21.6 L-15.6,25.2 L-14.8,25.8 L-14.2,26.4 L-13.8,27.2 L-13.7,27.9 L-13.7,58.5 L-13.8,59.2 L-14.2,60.0 L-14.8,60.6 L-15.6,61.2 L-21.8,64.8 L-22.8,65.3 L-24.0,65.6 L-25.2,65.8 L-26.5,65.9 L-27.8,65.8 L-29.0,65.6 L-30.2,65.3 L-31.2,64.8 L-37.4,61.2 L-38.2,60.6 L-38.8,60.0 L-39.2,59.2 L-39.3,58.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="-26.5" y1="35.3" x2="-26.5" y2="65.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M-15.6,25.2 L-14.8,25.8 L-14.2,26.4 L-13.8,27.2 L-13.7,27.9 L-13.8,28.6 L-14.2,29.4 L-14.8,30.0 L-15.6,30.6 L-21.8,34.2 L-22.8,34.7 L-24.0,35.0 L-25.2,35.2 L-26.5,35.3 L-27.8,35.2 L-29.0,35.0 L-30.2,34.7 L-31.2,34.2 L-37.4,30.6 L-38.2,30.0 L-38.8,29.4 L-39.2,28.6 L-39.3,27.9 L-39.2,27.2 L-38.8,26.4 L-38.2,25.8 L-37.4,25.2 L-31.2,21.6 L-30.2,21.1 L-29.0,20.8 L-27.8,20.6 L-26.5,20.5 L-25.2,20.6 L-24.0,20.8 L-22.8,21.1 L-21.8,21.6 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><path d="M4.3,13.5 L4.4,12.8 L4.8,12.0 L5.4,11.4 L6.2,10.8 L12.5,7.2 L13.5,6.7 L14.6,6.4 L15.9,6.2 L17.1,6.1 L18.4,6.2 L19.7,6.4 L20.8,6.7 L21.8,7.2 L28.1,10.8 L28.9,11.4 L29.5,12.0 L29.9,12.8 L30.0,13.5 L30.0,58.5 L29.9,59.2 L29.5,60.0 L28.9,60.6 L28.1,61.2 L21.8,64.8 L20.8,65.3 L19.7,65.6 L18.4,65.8 L17.1,65.9 L15.9,65.8 L14.6,65.6 L13.5,65.3 L12.5,64.8 L6.2,61.2 L5.4,60.6 L4.8,60.0 L4.4,59.2 L4.3,58.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="17.1" y1="20.9" x2="17.1" y2="65.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M28.1,10.8 L28.9,11.4 L29.5,12.0 L29.9,12.8 L30.0,13.5 L29.9,14.2 L29.5,15.0 L28.9,15.6 L28.1,16.2 L21.8,19.8 L20.8,20.3 L19.7,20.6 L18.4,20.8 L17.1,20.9 L15.9,20.8 L14.6,20.6 L13.5,20.3 L12.5,19.8 L6.2,16.2 L5.4,15.6 L4.8,15.0 L4.4,14.2 L4.3,13.5 L4.4,12.8 L4.8,12.0 L5.4,11.4 L6.2,10.8 L12.5,7.2 L13.5,6.7 L14.6,6.4 L15.9,6.2 L17.1,6.1 L18.4,6.2 L19.7,6.4 L20.8,6.7 L21.8,7.2 Z" fill="#FFFFFF" stroke="#62666E" stroke-linejoin="round"></path><path d="M47.9,-4.5 L48.1,-5.2 L48.4,-6.0 L49.1,-6.6 L49.9,-7.2 L56.1,-10.8 L57.1,-11.3 L58.3,-11.6 L59.5,-11.8 L60.8,-11.9 L62.1,-11.8 L63.3,-11.6 L64.5,-11.3 L65.5,-10.8 L71.7,-7.2 L72.5,-6.6 L73.1,-6.0 L73.5,-5.2 L73.6,-4.5 L73.6,58.5 L73.5,59.2 L73.1,60.0 L72.5,60.6 L71.7,61.2 L65.5,64.8 L64.5,65.3 L63.3,65.6 L62.1,65.8 L60.8,65.9 L59.5,65.8 L58.3,65.6 L57.1,65.3 L56.1,64.8 L49.9,61.2 L49.1,60.6 L48.4,60.0 L48.1,59.2 L47.9,58.5 Z" fill="#F6F6F6" stroke="#62666E" stroke-linejoin="round"></path><line x1="60.8" y1="2.9" x2="60.8" y2="65.9" stroke="#C9CBCF" stroke-linecap="round"></line><path d="M71.7,-7.2 L72.5,-6.6 L73.1,-6.0 L73.5,-5.2 L73.6,-4.5 L73.5,-3.8 L73.1,-3.0 L72.5,-2.4 L71.7,-1.8 L65.5,1.8 L64.5,2.3 L63.3,2.6 L62.1,2.8 L60.8,2.9 L59.5,2.8 L58.3,2.6 L57.1,2.3 L56.1,1.8 L49.9,-1.8 L49.1,-2.4 L48.4,-3.0 L48.1,-3.8 L47.9,-4.5 L48.1,-5.2 L48.4,-6.0 L49.1,-6.6 L49.9,-7.2 L56.1,-10.8 L57.1,-11.3 L58.3,-11.6 L59.5,-11.8 L60.8,-11.9 L62.1,-11.8 L63.3,-11.6 L64.5,-11.3 L65.5,-10.8 Z" fill="#E75416" stroke="#62666E" stroke-linejoin="round"></path><circle cx="62.4" cy="1.8" r="17" fill="#FFFFFF" fill-opacity="0.55" stroke="#62666E"></circle><circle cx="62.4" cy="1.8" r="13" fill="none" stroke="#C9CBCF"></circle><line x1="74.4" y1="13.8" x2="88.4" y2="27.8" stroke="#62666E" stroke-width="3" stroke-linecap="round"></line></svg>
+    )}
+  </span>
+  <div class="ox-svc-top">
+    <span class="ox-svc-ico">
+      {index === 0 && (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="8" x="3" y="3" rx="2"></rect><path d="M7 11v4a2 2 0 0 0 2 2h4"></path><rect width="8" height="8" x="13" y="13" rx="2"></rect></svg>
+      )}
+      {index === 1 && (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg>
+      )}
+      {index === 2 && (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="14" y="3" rx="1"></rect><path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"></path></svg>
+      )}
+      {index === 3 && (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"></path></svg>
+      )}
+    </span>
+    <span class="ox-svc-num text-caption font-medium text-secondary">{num}</span>
+  </div>
+  <div class="ox-svc-mini" aria-hidden={active ? 'true' : 'false'}>
+    <h3 class="m-0 text-heading font-semibold text-ink">{title}</h3>
+    <span class="ox-svc-open mt-2 items-center gap-1 text-caption font-medium">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Open
+    </span>
+  </div>
+  <div class="ox-svc-full">
+    <h3 class="m-0 text-heading font-semibold text-ink lg:text-title">{title}</h3>
+    <p class="mt-3 mb-0 text-body text-secondary lg:mt-4">{text}</p>
+  </div>
+  <button class="ox-svc-hit" type="button" aria-expanded="false" aria-label={`Open ${title}`} hidden={active}></button>
+</article>
+
+<style>
+  /* ---------- Phone (< 768): full card, no icon, number on the title line; sticky stacking ---------- */
+  .ox-svc {
+    position: sticky;
+    top: var(--stick-top);
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    align-items: baseline;
+    min-width: 0;
+    margin: 0;
+    padding: 24px;
+    background: var(--color-white);
+    border: 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-sizing: border-box;
+    transform-origin: 50% 0;
+    will-change: transform;
+  }
+  /* each next card sticks 12px lower and slides over the one before */
+  .ox-svc:nth-of-type(2) {
+    top: calc(var(--stick-top) + 12px);
+  }
+  .ox-svc:nth-of-type(3) {
+    top: calc(var(--stick-top) + 24px);
+  }
+  .ox-svc:nth-of-type(4) {
+    top: calc(var(--stick-top) + 36px);
+  }
+
+  .ox-svc-top,
+  .ox-svc-full {
+    display: contents;
+  }
+
+  .ox-svc-ico {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-ink);
+    color: var(--color-white);
+    transition: background-color 600ms var(--ease-emphasis);
+  }
+
+  .ox-svc-num {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* Isometric line drawing, centred above the text */
+  .ox-svc-artwrap {
+    position: static;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    max-width: 240px;
+    height: 180px;
+    margin: 0 auto 32px;
+    opacity: 0.7;
+  }
+  .ox-svc-art {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .ox-svc-art :global(*) {
+    vector-effect: non-scaling-stroke;
+  }
+  /* The stacked-layers drawing is visually heavier: scale it down so all four read the same size */
+  .ox-svc-art-dense {
+    width: 80%;
+    height: 80%;
+  }
+
+  .ox-svc-full h3 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ox-svc-full p {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .ox-svc-mini,
+  .ox-svc-open,
+  .ox-svc-hit {
+    display: none;
+  }
+
+  /* ---------- Tablet (768–1023): every card shows its text, 2-column grid ---------- */
+  @media (width >= 48rem) {
+    .ox-svc,
+    .ox-svc:nth-of-type(n) {
+      position: relative;
+      top: auto;
+      z-index: auto;
+      display: block;
+      transform-origin: 50% 50%;
+      will-change: auto;
+    }
+    .ox-svc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ox-svc-ico {
+      display: flex;
+    }
+    .ox-svc-artwrap {
+      margin: 32px auto 0;
+    }
+    .ox-svc-full {
+      display: block;
+      margin-top: 48px;
+    }
+  }
+
+  /* ---------- Desktop (>= 1024): auto-rotating accordion, the open card is wide ---------- */
+  @media (width >= 64rem) {
+    .ox-svc {
+      flex: 1 1 0;
+      padding: 0;
+      transition: flex-grow 900ms var(--ease-emphasis);
+    }
+    .ox-svc.is-active {
+      flex-grow: 2.6;
+    }
+    .ox-svc:not(.is-active):hover .ox-svc-open {
+      color: var(--color-ink);
+    }
+
+    .ox-svc-top {
+      position: absolute;
+      z-index: 1;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+    }
+    .ox-svc.is-active .ox-svc-ico {
+      background: var(--color-action);
+    }
+
+    /* Drawing from the bottom-right corner, bleeding off both edges; inner edges fade out */
+    .ox-svc-artwrap {
+      position: absolute;
+      bottom: -28px;
+      right: -40px;
+      width: 230px;
+      max-width: none;
+      height: 230px;
+      margin: 0;
+      justify-content: flex-end;
+      opacity: 0.5;
+      -webkit-mask-image: linear-gradient(to top, #000 55%, transparent), linear-gradient(to left, #000 60%, transparent);
+      -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(to top, #000 55%, transparent), linear-gradient(to left, #000 60%, transparent);
+      mask-composite: intersect;
+      transition:
+        bottom 900ms var(--ease-emphasis),
+        right 900ms var(--ease-emphasis),
+        width 900ms var(--ease-emphasis),
+        height 900ms var(--ease-emphasis);
+    }
+    .ox-svc.is-active .ox-svc-artwrap {
+      bottom: -40px;
+      right: -56px;
+      width: 420px;
+      height: 400px;
+    }
+
+    /* Closed card: title + "Open" at the bottom */
+    .ox-svc-mini {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      transition: opacity 500ms var(--ease-out) 400ms;
+    }
+    .ox-svc.is-active .ox-svc-mini {
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 300ms var(--ease-emphasis),
+        visibility 0s linear 300ms;
+    }
+    .ox-svc-open {
+      display: flex;
+      color: var(--color-secondary);
+    }
+
+    /* Open card: big title + text */
+    .ox-svc-full {
+      position: absolute;
+      z-index: 1;
+      left: 24px;
+      bottom: 24px;
+      width: 420px;
+      margin-top: 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(24px);
+      transition:
+        opacity 300ms var(--ease-emphasis),
+        transform 300ms var(--ease-emphasis),
+        visibility 0s linear 300ms;
+    }
+    .ox-svc.is-active .ox-svc-full {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition:
+        opacity 700ms var(--ease-out) 450ms,
+        transform 1000ms var(--ease-out) 450ms,
+        visibility 0s;
+    }
+
+    /* The whole closed card is the button */
+    .ox-svc-hit {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+    .ox-svc.is-active .ox-svc-hit {
+      display: none;
+    }
+    .ox-svc-hit:focus-visible {
+      outline: 2px solid var(--color-action);
+      outline-offset: -2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ox-svc,
+    .ox-svc-ico,
+    .ox-svc-artwrap,
+    .ox-svc-mini,
+    .ox-svc.is-active .ox-svc-mini,
+    .ox-svc-full,
+    .ox-svc.is-active .ox-svc-full {
+      transition: none;
+    }
+  }
+</style>

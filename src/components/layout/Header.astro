@@ -1,0 +1,145 @@
+---
+/**
+ * Sticky navbar. Desktop: logo | nav pill | language + CTA, in equal 304px side boxes
+ * so the nav stays optically centred. Below 1024px: logo + burger, which opens MobileMenu.
+ * scroll.ts adds `.is-scrolled` (frosted bar); this component's script toggles `.is-menu`.
+ */
+import ActionButton from '../ui/ActionButton.astro';
+import LanguageSwitcher from '../ui/LanguageSwitcher.astro';
+import MobileMenu from './MobileMenu.astro';
+
+type Props = {
+  /** canvas tweak `languageSwitcher` */
+  languageSwitcher?: 'menu' | 'segmented' | 'text';
+};
+
+const { languageSwitcher = 'menu' } = Astro.props;
+
+const links = [
+  { label: 'Services', href: '#services' },
+  { label: 'Products', href: '#products' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Company', href: '#company' },
+];
+---
+
+<header class="ox-head sticky top-[var(--head-top)] z-10 mt-[var(--head-gap)] box-border h-[var(--head-h)] px-[var(--head-inset)]" data-ox-head>
+  <div class="ox-bar mx-auto box-border flex h-[var(--head-h)] w-[min(100%,1280px)] items-center justify-between gap-6 rounded-md px-4 md:px-8">
+    <div class="ox-side ox-brand box-border flex w-auto flex-none items-center justify-start lg:w-[304px]">
+      <a href="#" aria-label="Omnuvex home" class="block w-[120px]">
+        <img src="/images/logo/omnuvex.png" alt="Omnuvex" class="block h-auto w-[120px]" />
+      </a>
+    </div>
+    <nav class="ox-nav hidden lg:block" aria-label="Main">
+      <ul class="m-0 flex list-none items-center gap-1 rounded-md bg-mist p-1">
+        {
+          links.map((l) => (
+            <li>
+              <a class="ox-navlink flex h-10 items-center rounded-sm px-4 text-ui font-medium text-secondary no-underline" href={l.href}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="ox-side ox-actions box-border hidden w-[304px] flex-none items-center justify-end gap-4 lg:flex">
+      <LanguageSwitcher variant={languageSwitcher} />
+      <ActionButton label="Book a free digital audit" href="#audit" />
+    </div>
+    <button
+      class="ox-toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center border-0 bg-none p-0 text-ink lg:hidden"
+      type="button"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="ox-mnav"
+      data-ox-toggle
+    >
+      <svg class="ox-burger" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg class="ox-x" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+  <MobileMenu />
+</header>
+
+<style>
+  /* Bar gets a frosted, rounded background once the hero has scrolled away (scroll.ts adds .is-scrolled) */
+  .ox-bar {
+    transition:
+      background-color var(--dur-ui) var(--ease-standard),
+      -webkit-backdrop-filter var(--dur-ui) var(--ease-standard),
+      backdrop-filter var(--dur-ui) var(--ease-standard);
+  }
+  .ox-head.is-scrolled .ox-bar {
+    background: var(--frost);
+    -webkit-backdrop-filter: blur(var(--frost-blur)) saturate(1.2);
+    backdrop-filter: blur(var(--frost-blur)) saturate(1.2);
+  }
+  /* Solid white while the mobile menu is open */
+  @media (width < 64rem) {
+    .ox-head.is-menu .ox-bar {
+      background: var(--color-white);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ox-bar {
+      transition: none;
+    }
+  }
+
+  .ox-navlink {
+    transition:
+      background-color var(--dur-hover) var(--ease-standard),
+      color var(--dur-hover) var(--ease-standard);
+  }
+  .ox-navlink:hover {
+    color: var(--color-ink);
+    background: var(--color-white);
+  }
+
+  /* Burger ↔ ✕ */
+  .ox-toggle .ox-x {
+    display: none;
+  }
+  .ox-head.is-menu .ox-toggle .ox-burger {
+    display: none;
+  }
+  .ox-head.is-menu .ox-toggle .ox-x {
+    display: block;
+  }
+</style>
+
+<script>
+  const head = document.querySelector<HTMLElement>('[data-ox-head]');
+  const toggle = head?.querySelector<HTMLButtonElement>('[data-ox-toggle]');
+  const mnav = head?.querySelector<HTMLElement>('#ox-mnav');
+
+  if (head && toggle && mnav) {
+    const isOpen = () => head.classList.contains('is-menu');
+    const setOpen = (open: boolean) => {
+      head.classList.toggle('is-menu', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      mnav.setAttribute('aria-hidden', String(!open));
+    };
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
+
+    // Tapping a link (anywhere in the list) or the CTA closes the menu
+    const close = () => {
+      if (isOpen()) setOpen(false);
+    };
+    mnav.querySelector('[data-mnav-list]')?.addEventListener('click', close);
+    mnav.querySelector('[data-mnav-cta]')?.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+</script>

@@ -1,0 +1,35 @@
+---
+/**
+ * How an engagement runs: grey tray, four white step cards with orange step numbers.
+ * Static, no hover motion. 4 columns desktop / 2 tablet / 1 phone.
+ */
+import RevealTitle from '../ui/RevealTitle.astro';
+import { steps } from '../../data/steps';
+---
+
+<section id="process" class="ox-steps relative z-1 py-16 md:py-24" aria-labelledby="steps-title">
+  <div class="ox-steps-wrap mx-auto max-w-page px-[18px] md:px-8">
+    <RevealTitle
+      id="steps-title"
+      text="How an engagement runs"
+      class="ox-steps-h m-0 text-title-sm font-semibold text-ink md:text-title"
+    />
+    <ol class="ox-steps-row m-0 mt-8 grid list-none grid-cols-1 gap-2 rounded-md bg-mist p-2 md:mt-12 md:grid-cols-2 lg:grid-cols-4">
+      {
+        steps.map((s, i) => (
+          <li class="ox-step relative flex min-h-[200px] flex-col justify-between gap-8 rounded-md bg-white p-6 md:h-60 md:min-h-0 md:gap-0 lg:h-70">
+            <span class="ox-step-num text-title font-semibold text-action tabular-nums md:text-numeral" aria-hidden="true">
+              {s.num}
+            </span>
+            <div class="ox-step-body">
+              <h3 class="ox-step-title m-0 text-menu font-semibold text-ink md:text-heading">
+                <span class="sr-only">{`Step ${i + 1}: `}</span>{s.title}
+              </h3>
+              <p class="ox-step-text mt-2 mb-0 text-ui text-secondary">{s.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
