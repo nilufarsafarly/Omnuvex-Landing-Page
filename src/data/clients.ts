@@ -1,3 +1,4 @@
+import { asset } from '../lib/asset';
 /**
  * "Trusted by" logos (canvas markup, section #clients). Ink is the grey default, colour shows on hover.
  * Heights are per breakpoint: desktop from the canvas inline styles, tablet / phone from its
@@ -12,9 +13,9 @@ export type Client = {
 };
 
 export const clients: Client[] = [
-  { name: 'TREVA Real Estate', ink: '/images/clients/treva-ink.png', color: '/images/clients/treva-color.png', shift: 2, height: { phone: 18, tablet: 26, desktop: 32 } },
-  { name: 'Trenders', ink: '/images/clients/trenders-ink.png', color: '/images/clients/trenders-color.png', shift: 0, height: { phone: 15, tablet: 22, desktop: 28 } },
-  { name: 'tvim', ink: '/images/clients/tvim-ink.png', color: '/images/clients/tvim-color.png', shift: 0, height: { phone: 14, tablet: 21, desktop: 26 } },
-  { name: 'BRABUS Island Baku', ink: '/images/clients/brabus-ink.png', color: '/images/clients/brabus-color.png', shift: 2, height: { phone: 15, tablet: 22, desktop: 28 } },
-  { name: 'Sabah Towers', ink: '/images/clients/sabah-ink.png', color: '/images/clients/sabah-color.png', shift: 0, height: { phone: 26, tablet: 37, desktop: 46 } },
+  { name: 'TREVA Real Estate', ink: asset('/images/clients/treva-ink.png'), color: asset('/images/clients/treva-color.png'), shift: 2, height: { phone: 18, tablet: 26, desktop: 32 } },
+  { name: 'Trenders', ink: asset('/images/clients/trenders-ink.png'), color: asset('/images/clients/trenders-color.png'), shift: 0, height: { phone: 15, tablet: 22, desktop: 28 } },
+  { name: 'tvim', ink: asset('/images/clients/tvim-ink.png'), color: asset('/images/clients/tvim-color.png'), shift: 0, height: { phone: 14, tablet: 21, desktop: 26 } },
+  { name: 'BRABUS Island Baku', ink: asset('/images/clients/brabus-ink.png'), color: asset('/images/clients/brabus-color.png'), shift: 2, height: { phone: 15, tablet: 22, desktop: 28 } },
+  { name: 'Sabah Towers', ink: asset('/images/clients/sabah-ink.png'), color: asset('/images/clients/sabah-color.png'), shift: 0, height: { phone: 26, tablet: 37, desktop: 46 } },
 ];

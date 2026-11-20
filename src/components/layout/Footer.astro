@@ -1,4 +1,5 @@
 ---
+import { asset } from '../../lib/asset';
 /**
  * Footer: full-width mist tray inside the page margins; white card with brand, social,
  * Menu / Contact columns and the bottom row (©, legal links, AZ · RU · EN). The orange
@@ -26,7 +27,7 @@ const currentId = 'en';
     <div class="ox-sfoot-card rounded-md bg-white px-5 pt-10 pb-6 md:px-[max(32px,calc((100vw_-_1216px)/2_-_40px))] md:pt-14 md:pb-8">
       <div class="ox-sfoot-top grid grid-cols-12 gap-x-6">
         <div class="ox-sfoot-brand col-span-full lg:col-span-5">
-          <img src="/images/logo/omnuvex.png" alt="Omnuvex" class="block h-auto w-[120px]" />
+          <img src={asset('/images/logo/omnuvex.png')} alt="Omnuvex" class="block h-auto w-[120px]" />
           <p class="mt-5 max-w-[360px] text-ui text-secondary">AI automation, custom software and systems integration for growing businesses.</p>
           <ul class="ox-sfoot-social mt-6 flex list-none gap-2 p-0">
             <li>
@@ -105,7 +106,7 @@ const currentId = 'en';
       </div>
     </div>
     <div class="ox-sfoot-markwrap pointer-events-none mt-8 aspect-[1740/282] overflow-hidden select-none md:mt-12" aria-hidden="true">
-      <img class="ox-sfoot-mark block h-auto w-full" src="/images/logo/omnuvex-wordmark.png" alt="" />
+      <img class="ox-sfoot-mark block h-auto w-full" src={asset('/images/logo/omnuvex-wordmark.png')} alt="" />
     </div>
   </div>
 </footer>

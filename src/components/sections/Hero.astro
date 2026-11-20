@@ -1,4 +1,5 @@
 ---
+import { asset } from '../../lib/asset';
 /**
  * Hero: three-line headline, sub-line + "See our work" button, and the two hands behind.
  * Desktop: one screen tall (720–900px minus the navbar), headline top-left, sub-line block
@@ -32,13 +33,13 @@ const handFilter = 'saturate(0.45) contrast(0.8) brightness(1.15)';
   >
     <img
       class="ox-hand ox-wire absolute max-w-none top-0 left-[38cqw] h-auto w-[62cqw] mix-blend-multiply will-change-transform lg:top-[-6.9cqw] lg:left-[46cqw] lg:w-[56cqw]"
-      src="/images/hero/hand-wireframe.png"
+      src={asset('/images/hero/hand-wireframe.png')}
       alt=""
       style={`opacity: ${handOpacity}; filter: ${handFilter}; transform: translate(0cqw, -0cqw) scaleX(-1)`}
     />
     <img
       class="ox-hand ox-human absolute max-w-none top-[36cqw] left-[-2cqw] h-auto w-[50cqw] mix-blend-multiply will-change-transform lg:top-[20.9cqw] lg:left-[-4cqw] lg:w-[60cqw]"
-      src="/images/hero/hand-human.png"
+      src={asset('/images/hero/hand-human.png')}
       alt=""
       style={`opacity: ${handOpacity}; filter: ${handFilter}; transform: translate(-0cqw, 0cqw) scaleX(-1)`}
     />

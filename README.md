@@ -28,3 +28,11 @@ Phone-first, matching the canvas: base = phone (< 768px), `md:` = tablet (768–
 - The audit form only shows the "Request received" state; nothing is sent.
 - Language switchers change the selected language only; there are no translations.
 - Footer/legal links (`#privacy`, `#terms`, `#cookies`, `#products`, `#portfolio`, `#company`) have no target sections, as in the canvas.
+
+## Deploy
+
+Every push to `main` builds the site and publishes it to GitHub Pages via `.github/workflows/deploy.yml`:
+https://nilufarsafarly.github.io/Omnuvex-Landing-Page/
+
+The site lives under the `/Omnuvex-Landing-Page` base path (set in `astro.config.mjs`), so locally it is at
+http://localhost:4321/Omnuvex-Landing-Page/. Reference files in `public/` with `asset('/images/…')` from `src/lib/asset.ts`, not a bare `/images/…` path.

@@ -1,3 +1,4 @@
+import { asset } from '../lib/asset';
 /** What our clients say (canvas: `quoteData`). Logos reuse the grey client logo files. */
 export type Quote = {
   text: string;
@@ -17,7 +18,7 @@ export const quotes: Quote[] = [
     role: 'VP of Operations, TREVA',
     initials: 'ER',
     company: 'TREVA Real Estate',
-    logo: '/images/clients/treva-ink.png',
+    logo: asset('/images/clients/treva-ink.png'),
     logoH: 32,
   },
   {
@@ -26,7 +27,7 @@ export const quotes: Quote[] = [
     role: 'Head of Growth, TVIM',
     initials: 'MV',
     company: 'TVIM',
-    logo: '/images/clients/tvim-ink.png',
+    logo: asset('/images/clients/tvim-ink.png'),
     logoH: 26,
   },
   {
@@ -35,7 +36,7 @@ export const quotes: Quote[] = [
     role: 'Chief Marketing Officer, TRENDERS',
     initials: 'SJ',
     company: 'TRENDERS',
-    logo: '/images/clients/trenders-ink.png',
+    logo: asset('/images/clients/trenders-ink.png'),
     logoH: 28,
   },
 ];

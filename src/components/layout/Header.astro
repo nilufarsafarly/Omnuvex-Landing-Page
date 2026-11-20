@@ -1,4 +1,5 @@
 ---
+import { asset } from '../../lib/asset';
 /**
  * Sticky navbar. Desktop: logo | nav pill | language + CTA, in equal 304px side boxes
  * so the nav stays optically centred. Below 1024px: logo + burger, which opens MobileMenu.
@@ -27,7 +28,7 @@ const links = [
   <div class="ox-bar mx-auto box-border flex h-[var(--head-h)] w-[min(100%,1280px)] items-center justify-between gap-6 rounded-md px-4 md:px-8">
     <div class="ox-side ox-brand box-border flex w-auto flex-none items-center justify-start lg:w-[304px]">
       <a href="#" aria-label="Omnuvex home" class="block w-[120px]">
-        <img src="/images/logo/omnuvex.png" alt="Omnuvex" class="block h-auto w-[120px]" />
+        <img src={asset('/images/logo/omnuvex.png')} alt="Omnuvex" class="block h-auto w-[120px]" />
       </a>
     </div>
     <nav class="ox-nav hidden lg:block" aria-label="Main">
